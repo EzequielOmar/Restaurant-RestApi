@@ -14,6 +14,7 @@ require __DIR__ . '/../vendor/autoload.php';
 require_once './controladores/usuarioApi.php';
 require_once './controladores/productoApi.php';
 require_once './controladores/mesaApi.php';
+require_once './controladores/pedidoApi.php';
 
 //carga variables de entorno solo en modo dev
 if (!isset($_SERVER['APP_ENV'])) {
@@ -47,6 +48,15 @@ $app->group('/producto',function () {
 $app->group('/mesa',function () {
     $this->get('[/]', \mesaApi::class . ':traerTodos');
     $this->post('[/]', \mesaApi::class . ':CargarUno');
+    //$this->get('/{id}', \mesaApi::class . ':traerUno');
+    //$this->delete('/', \mesaApi::class . ':BorrarUno');
+    //$this->put('/', \mesaApi::class . ':ModificarUno');
+});
+
+//pedidos
+$app->group('/pedido',function () {
+    $this->get('[/]', \pedidoApi::class . ':traerTodos');
+    $this->post('[/]', \pedidoApi::class . ':CargarUno');
     //$this->get('/{id}', \mesaApi::class . ':traerUno');
     //$this->delete('/', \mesaApi::class . ':BorrarUno');
     //$this->put('/', \mesaApi::class . ':ModificarUno');

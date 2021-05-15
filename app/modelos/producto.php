@@ -27,5 +27,13 @@ class Producto{
         $consulta->bindValue(':stock',$this->stock,PDO::PARAM_INT);
         return $consulta->execute();
     }
+    static function ObtenerPorID(int $id){
+        if($id <= 0)
+            return null;
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("select * from producto where id=:id");
+        $consulta->bindValue(':id',$id,PDO::PARAM_INT);
+        return $consulta->execute()? $consulta->fetchObject("Producto"):null;		
+    }
 }
 ?>

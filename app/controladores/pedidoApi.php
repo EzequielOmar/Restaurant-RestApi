@@ -1,9 +1,28 @@
 <?php
 require_once './modelos/pedido.php';
 require_once './interfaces/IApiUsable.php';
+require_once __DIR__.'/../modelos/mesa.php';
+require_once __DIR__.'/../modelos/pedido.php';
+require_once __DIR__.'/../modelos/usuario.php';
 
 class PedidoApi extends Pedido implements IApiUsable
 {
+    //FUNCIONES PRIVADAS
+    private static function ValidarPedido(Pedido $ped, $response){
+        if(!ctype_alnum($ped->codigo)||strlen($ped->codigo) != 5){
+            return "No corresponde el formato del código.\n";
+        }
+        $mesa = Mesa::ObtenerPorCodigo($ped->codigo_mesa);
+        if(empty($mesa)||$mesa->estado == "cerrada")
+            return "No existe una mesa con ese código.\n";
+        $prod = Producto::ObtenerPorID($ped->id_producto);
+        if(empty($prod)||$prod->stock<$ped->cantidad)
+            return "No tenemos stock para realizar el pedido.\n";
+        $mozo = Usuario::ObtenerPorID($ped->id_mozo);
+        if(empty($mozo)||$mozo->sector != "mozo")
+            return "No hay personal para tomar el pedido.\n";
+    }
+    //FUNCIONES PUBLICAS
  	public function TraerUno($request, $response, $args) {
      	return;
         //$id=$args['id'];
@@ -21,29 +40,30 @@ class PedidoApi extends Pedido implements IApiUsable
     }
     public function CargarUno($request, $response, $args) {
      	$parametros = $request->getParsedBody();
-        $nombre= $parametros['nombre']?? null;
-        $descripcion= $parametros['descripcion'] ?? null;
-        $sector= $parametros['sector'] ?? null;
-        $precio= $parametros['precio'] ?? null;
-        $stock= $parametros['stock'] ?? null;
-        if(empty($nombre)||empty($descripcion)||empty($sector)||empty($precio)||empty($stock))
+        $codigo= $parametros['codigo']?? null;
+        $codigo_mesa= $parametros['codigo_mesa'] ?? null;
+        $id_producto= $parametros['id_producto'] ?? null;
+        $cantidad= $parametros['cantidad'] ?? null;
+        $id_mozo= $parametros['id_mozo'] ?? null;
+        if(empty($codigo)||empty($codigo_mesa)||empty($id_producto)||
+           empty($cantidad)||empty($id_mozo))
             return $response->getBody()->write("Error, datos faltantes.\n");
-        $prod = new Pedido();
-        $prod->nombre=ucfirst(strtolower(trim($nombre)));
-        $prod->descripcion=ucfirst(strtolower(trim($descripcion)));
-        $prod->sector=strtolower(trim($sector));
-        switch($prod->sector){
-            case "bar":case "cerveza":case "cocina":case "mozo":case "socio":
-                break;
-                default:
-                return $response->getBody()->write("No corresponde el sector.\n");
-        }
-        if(!is_numeric($precio)||!is_numeric($stock)){
-            return $response->getBody()->write("Error al cargar los datos\n");
-        }
-        $prod->precio = str_replace(',','.',$precio);
-        $prod->stock = $stock;
-        return $prod->GuardarBD()? 
+        $ped = new Pedido();
+        $ped->codigo = $codigo;
+        $ped->codigo_mesa = trim($codigo_mesa);
+        $ped->estado = "comandado";
+        $ped->id_producto = $id_producto;
+        $ped->cantidad = $cantidad;
+        $ped->id_mozo = $id_mozo;
+        $ped->id_elaborador = 0;
+        $error = self::ValidarPedido($ped,$response);  
+        if(!empty($error)){
+            return $response->getBody()->write($error);
+        } 
+        $dt = new DateTime("now",new DateTimeZone("America/Argentina/Buenos_Aires"));
+        $ped->fecha = $dt->format('Y-m-d');
+        $ped->hora_comandado = $dt->format('H:i:s');
+        return $ped->GuardarBD()? 
             $response->getBody()->write("Operación (alta de pedido) exitosa.\n"):
             $response->getBody()->write("Error, operación (alta de pedido) fallida.\n");
     }

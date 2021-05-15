@@ -26,10 +26,10 @@ class MesaApi extends Mesa implements IApiUsable
         if(empty($codigo)||empty($estado))
             return $response->getBody()->write("Error, datos faltantes.\n");
         $mesa = new Mesa();
-        $mesa->codigo=strtolower(trim($codigo));
+        $mesa->codigo=trim($codigo);
         $mesa->estado=strtolower(trim($estado));
         if(!ctype_alnum($mesa->codigo)||strlen($mesa->codigo) != 5){
-            return $response->getBody()->write("No corresponde el código.\n");
+            return $response->getBody()->write("No corresponde el formato código.\n");
         }
         if($mesa->estado != "abierta" && $mesa->estado != "cerrada")
            return $response->getBody()->write("No corresponde el estado.\n");
