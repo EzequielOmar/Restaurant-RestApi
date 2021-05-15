@@ -1,8 +1,8 @@
 <?php
-require_once './modelos/usuario.php';
+require_once './modelos/mesa.php';
 require_once './interfaces/IApiUsable.php';
 
-class usuarioApi extends Usuario implements IApiUsable
+class MesaApi extends Mesa implements IApiUsable
 {
  	public function TraerUno($request, $response, $args) {
      	return;
@@ -12,39 +12,30 @@ class usuarioApi extends Usuario implements IApiUsable
     	//return $newResponse;
     }
     public function TraerTodos($request, $response, $args) {
-      	$usuarios=Usuario::GetArrayObj();
-        if(is_null($usuarios))
+      	$mesas = Mesa::GetArrayObj();
+        if(is_null($mesas))
             return $response->getBody()->write("Error al obtener datos de la base de datos\n");
-    	return count($usuarios) > 0 ?
-            $response->withJson($usuarios, 200):
-            $response->getBody()->write("No existe ningún usuario en la lista\n");
+    	return count($mesas) > 0 ?
+            $response->withJson($mesas , 200):
+            $response->getBody()->write("No existe ningún mesa en la lista\n");
     }
     public function CargarUno($request, $response, $args) {
      	$parametros = $request->getParsedBody();
-        $nombre= $parametros['nombre']?? null;
-        $apellido= $parametros['apellido'] ?? null;
-        $clave= $parametros['clave'] ?? null;
-        $sector= $parametros['sector'] ?? null;
-        if(empty($nombre)||empty($apellido)||empty($clave)||empty($sector))
+        $codigo= $parametros['codigo']?? null;
+        $estado= $parametros['estado'] ?? null;
+        if(empty($codigo)||empty($estado))
             return $response->getBody()->write("Error, datos faltantes.\n");
-        $usr = new Usuario();
-        $usr->nombre=ucwords(strtolower(trim($nombre)));
-        $usr->apellido=ucwords(strtolower(trim($apellido)));
-        $usr->setClave($clave);
-        $usr->sector=strtolower(trim($sector));
-        switch($usr->sector){
-            case "bar":case "cerveza":case "cocina":case "mozo":case "socio":
-                break;
-            default:
-                return $response->getBody()->write("No corresponde el sector.\n");
+        $mesa = new Mesa();
+        $mesa->codigo=strtolower(trim($codigo));
+        $mesa->estado=strtolower(trim($estado));
+        if(!ctype_alnum($mesa->codigo)||strlen($mesa->codigo) != 5){
+            return $response->getBody()->write("No corresponde el código.\n");
         }
-        $dt = new DateTime("now",new DateTimeZone("America/Argentina/Buenos_Aires"));
-        $usr->fecha_ing = $dt->format('Y-m-d H-i-s');
-        $usr->cant_op = 0;
-        $usr->estado = "activo";
-        return $usr->GuardarBD()? 
-            $response->getBody()->write("Operación (alta de usuario) exitosa.\n"):
-            $response->getBody()->write("Error, operación (alta de usuario) fallida.\n");
+        if($mesa->estado != "abierta" && $mesa->estado != "cerrada")
+           return $response->getBody()->write("No corresponde el estado.\n");
+        return $mesa->GuardarBD()? 
+            $response->getBody()->write("Operación (alta de mesa) exitosa.\n"):
+            $response->getBody()->write("Error, operación (alta de mesa) fallida.\n");
     }
     public function BorrarUno($request, $response, $args) {
         return;

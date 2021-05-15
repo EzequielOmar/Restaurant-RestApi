@@ -1,8 +1,8 @@
 <?php
-require_once './modelos/usuario.php';
+require_once './modelos/producto.php';
 require_once './interfaces/IApiUsable.php';
 
-class usuarioApi extends Usuario implements IApiUsable
+class ProductoApi extends Producto implements IApiUsable
 {
  	public function TraerUno($request, $response, $args) {
      	return;
@@ -12,39 +12,40 @@ class usuarioApi extends Usuario implements IApiUsable
     	//return $newResponse;
     }
     public function TraerTodos($request, $response, $args) {
-      	$usuarios=Usuario::GetArrayObj();
-        if(is_null($usuarios))
+      	$productos = Producto::GetArrayObj();
+        if(is_null($productos))
             return $response->getBody()->write("Error al obtener datos de la base de datos\n");
-    	return count($usuarios) > 0 ?
-            $response->withJson($usuarios, 200):
-            $response->getBody()->write("No existe ningún usuario en la lista\n");
+    	return count($productos) > 0 ?
+            $response->withJson($productos , 200):
+            $response->getBody()->write("No existe ningún producto en la lista\n");
     }
     public function CargarUno($request, $response, $args) {
      	$parametros = $request->getParsedBody();
         $nombre= $parametros['nombre']?? null;
-        $apellido= $parametros['apellido'] ?? null;
-        $clave= $parametros['clave'] ?? null;
+        $descripcion= $parametros['descripcion'] ?? null;
         $sector= $parametros['sector'] ?? null;
-        if(empty($nombre)||empty($apellido)||empty($clave)||empty($sector))
+        $precio= $parametros['precio'] ?? null;
+        $stock= $parametros['stock'] ?? null;
+        if(empty($nombre)||empty($descripcion)||empty($sector)||empty($precio)||empty($stock))
             return $response->getBody()->write("Error, datos faltantes.\n");
-        $usr = new Usuario();
-        $usr->nombre=ucwords(strtolower(trim($nombre)));
-        $usr->apellido=ucwords(strtolower(trim($apellido)));
-        $usr->setClave($clave);
-        $usr->sector=strtolower(trim($sector));
-        switch($usr->sector){
+        $prod = new Producto();
+        $prod->nombre=ucfirst(strtolower(trim($nombre)));
+        $prod->descripcion=ucfirst(strtolower(trim($descripcion)));
+        $prod->sector=strtolower(trim($sector));
+        switch($prod->sector){
             case "bar":case "cerveza":case "cocina":case "mozo":case "socio":
                 break;
-            default:
+                default:
                 return $response->getBody()->write("No corresponde el sector.\n");
         }
-        $dt = new DateTime("now",new DateTimeZone("America/Argentina/Buenos_Aires"));
-        $usr->fecha_ing = $dt->format('Y-m-d H-i-s');
-        $usr->cant_op = 0;
-        $usr->estado = "activo";
-        return $usr->GuardarBD()? 
-            $response->getBody()->write("Operación (alta de usuario) exitosa.\n"):
-            $response->getBody()->write("Error, operación (alta de usuario) fallida.\n");
+        if(!is_numeric($precio)||!is_numeric($stock)){
+            return $response->getBody()->write("Error al cargar los datos\n");
+        }
+        $prod->precio = str_replace(',','.',$precio);
+        $prod->stock = $stock;
+        return $prod->GuardarBD()? 
+            $response->getBody()->write("Operación (alta de producto) exitosa.\n"):
+            $response->getBody()->write("Error, operación (alta de producto) fallida.\n");
     }
     public function BorrarUno($request, $response, $args) {
         return;
