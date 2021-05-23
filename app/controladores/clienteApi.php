@@ -1,9 +1,9 @@
 <?php
-require_once './modelos/usuario.php';
+require_once './utiles/validar.php';
 require_once './interfaces/IApiUsable.php';
+require_once './modelos/cliente.php';
 
-class usuarioApi extends Usuario implements IApiUsable
-{
+class clienteApi extends Cliente implements IApiUsable{
  	public function TraerUno($request, $response, $args) {
      	return;
         //$id=$args['id'];
@@ -12,39 +12,20 @@ class usuarioApi extends Usuario implements IApiUsable
     	//return $newResponse;
     }
     public function TraerTodos($request, $response, $args) {
-      	$usuarios=Usuario::GetArrayObj();
-        if(is_null($usuarios))
-            return $response->getBody()->write("Error al obtener datos de la base de datos\n");
-    	return count($usuarios) > 0 ?
-            $response->withJson($usuarios, 200):
-            $response->getBody()->write("No existe ningún usuario en la lista\n");
+      	$cliente=Cliente::GetArrayObj();
+        if(is_null($cliente))
+            return $response->withJson("Error al obtener datos de la base de datos.",500);
+    	return count($cliente) > 0 ?
+            $response->withJson($cliente, 200):
+            $response->withJson("No existe ningún cliente en la lista.",200);
     }
     public function CargarUno($request, $response, $args) {
-     	$parametros = $request->getParsedBody();
-        $nombre= $parametros['nombre']?? null;
-        $apellido= $parametros['apellido'] ?? null;
-        $clave= $parametros['clave'] ?? null;
-        $sector= $parametros['sector'] ?? null;
-        if(empty($nombre)||empty($apellido)||empty($clave)||empty($sector))
-            return $response->getBody()->write("Error, datos faltantes.\n");
-        $usr = new Usuario();
-        $usr->nombre=ucwords(strtolower(trim($nombre)));
-        $usr->apellido=ucwords(strtolower(trim($apellido)));
-        $usr->setClave($clave);
-        $usr->sector=strtolower(trim($sector));
-        switch($usr->sector){
-            case "bar":case "cerveza":case "cocina":case "mozo":case "socio":
-                break;
-            default:
-                return $response->getBody()->write("No corresponde el sector.\n");
-        }
-        $dt = new DateTime("now",new DateTimeZone("America/Argentina/Buenos_Aires"));
-        $usr->fecha_ing = $dt->format('Y-m-d H-i-s');
-        $usr->cant_op = 0;
-        $usr->estado = "activo";
-        return $usr->GuardarBD()? 
-            $response->getBody()->write("Operación (alta de usuario) exitosa.\n"):
-            $response->getBody()->write("Error, operación (alta de usuario) fallida.\n");
+        $elem = Validar::cliente($request->getParsedBody());
+        if(is_string($elem))
+            return $response->withJson($elem,400);
+        return $elem->GuardarBD()? 
+            $response->withJson("Operación (alta de cliente) exitosa.",201):
+            $response->withJson("Error, operación (alta de cliente) fallida.",500);
     }
     public function BorrarUno($request, $response, $args) {
         return;
@@ -82,6 +63,4 @@ class usuarioApi extends Usuario implements IApiUsable
 		//$objDelaRespuesta->resultado=$resultado;
 		//return $response->withJson($objDelaRespuesta, 200);		
     }
-
-
 }

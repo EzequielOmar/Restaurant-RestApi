@@ -14,28 +14,18 @@ class MesaApi extends Mesa implements IApiUsable
     public function TraerTodos($request, $response, $args) {
       	$mesas = Mesa::GetArrayObj();
         if(is_null($mesas))
-            return $response->getBody()->write("Error al obtener datos de la base de datos\n");
+            return $response->withJson("Error al obtener datos de la base de datos\n",500);
     	return count($mesas) > 0 ?
             $response->withJson($mesas , 200):
-            $response->getBody()->write("No existe ningún mesa en la lista\n");
+            $response->withJson("No existe ningún mesa en la lista\n",204);
     }
     public function CargarUno($request, $response, $args) {
-     	$parametros = $request->getParsedBody();
-        $codigo= $parametros['codigo']?? null;
-        $estado= $parametros['estado'] ?? null;
-        if(empty($codigo)||empty($estado))
-            return $response->getBody()->write("Error, datos faltantes.\n");
-        $mesa = new Mesa();
-        $mesa->codigo=trim($codigo);
-        $mesa->estado=strtolower(trim($estado));
-        if(!ctype_alnum($mesa->codigo)||strlen($mesa->codigo) != 5){
-            return $response->getBody()->write("No corresponde el formato código.\n");
-        }
-        if($mesa->estado != "abierta" && $mesa->estado != "cerrada")
-           return $response->getBody()->write("No corresponde el estado.\n");
-        return $mesa->GuardarBD()? 
-            $response->getBody()->write("Operación (alta de mesa) exitosa.\n"):
-            $response->getBody()->write("Error, operación (alta de mesa) fallida.\n");
+		$elem = Validar::Mesa($request->getParsedBody());
+		if(is_string($elem))
+			return $response->withJson($elem,400);
+        return $elem->GuardarBD()? 
+            $response->withJson("Operación (alta de mesa) exitosa.\n",201):
+            $response->withJson("Error, operación (alta de mesa) fallida.\n",500);
     }
     public function BorrarUno($request, $response, $args) {
         return;
@@ -59,7 +49,7 @@ class MesaApi extends Mesa implements IApiUsable
     }
     public function ModificarUno($request, $response, $args) {
         return;
-        //$response->getBody()->write("<h1>Modificar  uno</h1>");
+        //$response->withJson("<h1>Modificar  uno</h1>");
      	//$parametros = $request->getParsedBody();
 	    //var_dump($parametros);    	
 	    //$micd = new cd();

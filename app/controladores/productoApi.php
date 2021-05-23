@@ -14,38 +14,18 @@ class ProductoApi extends Producto implements IApiUsable
     public function TraerTodos($request, $response, $args) {
       	$productos = Producto::GetArrayObj();
         if(is_null($productos))
-            return $response->getBody()->write("Error al obtener datos de la base de datos\n");
+            return $response->withJson("Error al obtener datos de la base de datos",500);
     	return count($productos) > 0 ?
             $response->withJson($productos , 200):
-            $response->getBody()->write("No existe ningún producto en la lista\n");
+            $response->withJson("No existe ningún producto en la lista",204);
     }
     public function CargarUno($request, $response, $args) {
-     	$parametros = $request->getParsedBody();
-        $nombre= $parametros['nombre']?? null;
-        $descripcion= $parametros['descripcion'] ?? null;
-        $sector= $parametros['sector'] ?? null;
-        $precio= $parametros['precio'] ?? null;
-        $stock= $parametros['stock'] ?? null;
-        if(empty($nombre)||empty($descripcion)||empty($sector)||empty($precio)||empty($stock))
-            return $response->getBody()->write("Error, datos faltantes.\n");
-        $prod = new Producto();
-        $prod->nombre=ucfirst(strtolower(trim($nombre)));
-        $prod->descripcion=ucfirst(strtolower(trim($descripcion)));
-        $prod->sector=strtolower(trim($sector));
-        switch($prod->sector){
-            case "bar":case "cerveza":case "cocina":case "mozo":case "socio":
-                break;
-                default:
-                return $response->getBody()->write("No corresponde el sector.\n");
-        }
-        if(!is_numeric($precio)||!is_numeric($stock)){
-            return $response->getBody()->write("Error al cargar los datos\n");
-        }
-        $prod->precio = str_replace(',','.',$precio);
-        $prod->stock = $stock;
-        return $prod->GuardarBD()? 
-            $response->getBody()->write("Operación (alta de producto) exitosa.\n"):
-            $response->getBody()->write("Error, operación (alta de producto) fallida.\n");
+        $elem = Validar::Producto($request->getParsedBody());
+        if(is_string($elem))
+            return $response->withJson($elem,400);
+        return $elem->GuardarBD()? 
+            $response->withJson("Operación (alta de producto) exitosa.",201):
+            $response->withJson("Error, operación (alta de producto) fallida.",500);
     }
     public function BorrarUno($request, $response, $args) {
         return;
@@ -69,7 +49,7 @@ class ProductoApi extends Producto implements IApiUsable
     }
     public function ModificarUno($request, $response, $args) {
         return;
-        //$response->getBody()->write("<h1>Modificar  uno</h1>");
+        //$response->withJson("<h1>Modificar  uno</h1>");
      	//$parametros = $request->getParsedBody();
 	    //var_dump($parametros);    	
 	    //$micd = new cd();

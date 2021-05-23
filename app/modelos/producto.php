@@ -35,5 +35,11 @@ class Producto{
         $consulta->bindValue(':id',$id,PDO::PARAM_INT);
         return $consulta->execute()? $consulta->fetchObject("Producto"):null;		
     }
+    static function ObtenerPorNombre(string $nombre){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("select * from producto where nombre=:nombre");
+        $consulta->bindValue(':nombre',$nombre,PDO::PARAM_STR);
+        return $consulta->execute()? $consulta->fetchObject("Producto"):null;		
+    }
 }
 ?>

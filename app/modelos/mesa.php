@@ -21,7 +21,7 @@ class Mesa{
     }
     static function ObtenerPorCodigo($codigo_mesa){
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-        $consulta = $objetoAccesoDato->RetornarConsulta("select 1 from mesa where codigo=:codigo");
+        $consulta = $objetoAccesoDato->RetornarConsulta("select * from mesa where codigo=:codigo");
         $consulta->bindValue(':codigo',$codigo_mesa,PDO::PARAM_STR);
         return $consulta->execute()? $consulta->fetchObject("Mesa"):null;		
     }

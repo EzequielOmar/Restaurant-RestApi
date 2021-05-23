@@ -3,6 +3,8 @@
 require_once './db/AccesoDatos.php';
 
 class Pedido{
+    static public $path_fotos = "./uploads/";
+
     public $id;
     public $codigo;
     public $codigo_mesa;
@@ -39,6 +41,12 @@ class Pedido{
         $consulta->bindValue(':fecha',$this->fecha,PDO::PARAM_STR);
         $consulta->bindValue(':hora_comandado',$this->hora_comandado,PDO::PARAM_STR);
         return $consulta->execute();
+    }
+    static function ObtenerPorCodigo($codigo){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("select * from pedido where codigo=:codigo");
+        $consulta->bindValue(':codigo',$codigo,PDO::PARAM_STR);
+        return $consulta->execute()? $consulta->fetchObject("Pedido"):null;		
     }
 }
 ?>
