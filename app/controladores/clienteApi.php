@@ -2,6 +2,9 @@
 require_once './utiles/validar.php';
 require_once './interfaces/IApiUsable.php';
 require_once './modelos/cliente.php';
+require_once './utiles/token.php';
+
+session_start();
 
 class clienteApi extends Cliente implements IApiUsable{
  	public function TraerUno($request, $response, $args) {
@@ -63,4 +66,15 @@ class clienteApi extends Cliente implements IApiUsable{
 		//$objDelaRespuesta->resultado=$resultado;
 		//return $response->withJson($objDelaRespuesta, 200);		
     }
+	public function Loguear($request, $response, $args){
+		$elem = Validar::logCliente($request->getParsedBody());
+		if(is_string($elem))
+            return $response->withJson($elem,400);
+		$data = array('id'=>$elem->id,
+					  'mail'=>$elem->mail,
+					  'nombre'=>$elem->nombre,
+					  'cel'=>$elem->cel);
+		$_SESSION['token'] = Token::Crear($data);
+		return $response->withJson("Logueo exitoso.",200);
+	}
 }

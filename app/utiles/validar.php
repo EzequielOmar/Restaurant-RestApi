@@ -161,5 +161,33 @@ class Validar{
             return "Ya existe una mesa con el codigo ".$mesa->codigo.".";
         return $mesa;
     }
+    /**
+     * Recibe la variable que contiene los params,
+     * valida que exista el mail, que coincidan las claves y retorna un Cliente
+     */
+    public static function logCliente($params){
+        $mail= $params['mail']?? null;
+        $clave= $params['clave'] ?? null;
+        $cli = Cliente::ObtenerPorMail($mail);
+        if(empty($cli))
+            return "No existe un usuario con ese mail. Regístrese.";
+        if($cli->clave != Validar::HashClave($clave))
+            return "Contraseña incorrecta.";
+        return $cli; 
+    }
+    /**
+     * Recibe la variable que contiene los params,
+     * valida que exista el dni, que coincidan las claves y retorna un Staff
+     */
+    public static function logStaff($params){
+        $dni= $params['dni']?? null;
+        $clave= $params['clave'] ?? null;
+        $staff = Staff::ObtenerPorDni($dni);
+        if(empty($staff))
+            return "No existe un usuario con ese mail. Regístrese.";
+        if($staff->clave != Validar::HashClave($clave))
+            return "Contraseña incorrecta.";
+        return $staff; 
+    }
 }
 ?>
