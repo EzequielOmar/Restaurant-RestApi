@@ -3,74 +3,40 @@ require_once './utiles/validar.php';
 require_once './interfaces/IApiUsable.php';
 
 class staffApi extends Staff implements IApiUsable{
- 	public function TraerUno($request, $response, $args) {
+ 	public function TraerUno($req, $res, $args) {
      	return;
-        //$id=$args['id'];
-    	//$elCd=cd::TraerUnCd($id);
-     	//$newResponse = $response->withJson($elCd, 200);  
-    	//return $newResponse;
     }
-    public function TraerTodos($request, $response, $args) {
+    public function TraerTodos($req, $res, $args) {
       	$staff=Staff::GetArrayObj();
         if(is_null($staff))
-            return $response->withJson("Error al obtener datos de la base de datos.",500);
+            return $res->withJson("Error al obtener datos de la base de datos.",500);
     	return count($staff) > 0 ?
-            $response->withJson($staff, 200):
-            $response->withJson("No existe ningún staff en la lista.",200);
+            $res->withJson($staff, 200):
+            $res->withJson("No existe ningún staff en la lista.",200);
     }
-    public function CargarUno($request, $response, $args) {
-        $elem = Validar::Staff($request->getParsedBody());
+    public function CargarUno($req, $res, $args) {
+        $elem = Validar::Staff($req->getParsedBody());
         if(is_string($elem))
-            return $response->withJson($elem,400);
+            return $res->withJson($elem,400);
         return $elem->GuardarBD()? 
-            $response->withJson("Operación (alta de staff) exitosa.",201):
-            $response->withJson("Error, operación (alta de staff) fallida.",500);
+            $res->withJson("Operación (alta de staff) exitosa.",201):
+            $res->withJson("Error, operación (alta de staff) fallida.",500);
     }
-    public function BorrarUno($request, $response, $args) {
+    public function BorrarUno($req, $res, $args) {
         return;
-        //$parametros = $request->getParsedBody();
-     	//$id=$parametros['id'];
-     	//$cd= new cd();
-     	//$cd->id=$id;
-     	//$cantidadDeBorrados=$cd->BorrarCd();
-     	//$objDelaRespuesta= new stdclass();
-	    //$objDelaRespuesta->cantidad=$cantidadDeBorrados;
-	    //if($cantidadDeBorrados>0)
-	    //	{
-	    //		 $objDelaRespuesta->resultado="algo borro!!!";
-	    //	}
-	    //	else
-	    //	{
-	    //		$objDelaRespuesta->resultado="no Borro nada!!!";
-	    //	}
-	    //$newResponse = $response->withJson($objDelaRespuesta, 200);  
-      	//return $newResponse;
     }
-    public function ModificarUno($request, $response, $args) {
+    public function ModificarUno($req, $res, $args) {
         return;
-        //$response->getBody()->write("<h1>Modificar  uno</h1>");
-     	//$parametros = $request->getParsedBody();
-	    //var_dump($parametros);    	
-	    //$micd = new cd();
-	    //$micd->id=$parametros['id'];
-	    //$micd->titulo=$parametros['titulo'];
-	    //$micd->cantante=$parametros['cantante'];
-	    //$micd->año=$parametros['anio'];
-	   	//$resultado =$micd->ModificarCdParametros();
-	   	//$objDelaRespuesta= new stdclass();
-		//var_dump($resultado);
-		//$objDelaRespuesta->resultado=$resultado;
-		//return $response->withJson($objDelaRespuesta, 200);		
     }
-	public function Loguear($request, $response, $args){
-		$elem = Validar::logStaff($request->getParsedBody());
+	public function Loguear($req, $res, $args){
+		$elem = Validar::logStaff($req->getParsedBody());
 		if(is_string($elem))
-            return $response->withJson($elem,400);
+            return $res->withJson($elem,400);
 		$data = array('id'=>$elem->id,
 					  'dni'=>$elem->dni,
 					  'nombre'=>$elem->nombre,
 					  'sector'=>$elem->sector);
 		$_SESSION['token'] = Token::Crear($data);
-		return $response->withJson("Logueo exitoso.",200);
+		return $res->withJson("Logueo exitoso.",200);
 	}
 }

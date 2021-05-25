@@ -6,10 +6,6 @@ class ProductoApi extends Producto implements IApiUsable
 {
  	public function TraerUno($request, $response, $args) {
      	return;
-        //$id=$args['id'];
-    	//$elCd=cd::TraerUnCd($id);
-     	//$newResponse = $response->withJson($elCd, 200);  
-    	//return $newResponse;
     }
     public function TraerTodos($request, $response, $args) {
       	$productos = Producto::GetArrayObj();
@@ -29,39 +25,9 @@ class ProductoApi extends Producto implements IApiUsable
     }
     public function BorrarUno($request, $response, $args) {
         return;
-        //$parametros = $request->getParsedBody();
-     	//$id=$parametros['id'];
-     	//$cd= new cd();
-     	//$cd->id=$id;
-     	//$cantidadDeBorrados=$cd->BorrarCd();
-     	//$objDelaRespuesta= new stdclass();
-	    //$objDelaRespuesta->cantidad=$cantidadDeBorrados;
-	    //if($cantidadDeBorrados>0)
-	    //	{
-	    //		 $objDelaRespuesta->resultado="algo borro!!!";
-	    //	}
-	    //	else
-	    //	{
-	    //		$objDelaRespuesta->resultado="no Borro nada!!!";
-	    //	}
-	    //$newResponse = $response->withJson($objDelaRespuesta, 200);  
-      	//return $newResponse;
     }
     public function ModificarUno($request, $response, $args) {
         return;
-        //$response->withJson("<h1>Modificar  uno</h1>");
-     	//$parametros = $request->getParsedBody();
-	    //var_dump($parametros);    	
-	    //$micd = new cd();
-	    //$micd->id=$parametros['id'];
-	    //$micd->titulo=$parametros['titulo'];
-	    //$micd->cantante=$parametros['cantante'];
-	    //$micd->año=$parametros['anio'];
-	   	//$resultado =$micd->ModificarCdParametros();
-	   	//$objDelaRespuesta= new stdclass();
-		//var_dump($resultado);
-		//$objDelaRespuesta->resultado=$resultado;
-		//return $response->withJson($objDelaRespuesta, 200);		
     }
 
 

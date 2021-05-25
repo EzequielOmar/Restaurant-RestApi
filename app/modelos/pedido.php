@@ -33,7 +33,7 @@ class Pedido{
         :cantidad,:id_mozo,:id_elaborador,:fecha,:hora_comandado)");
         $consulta->bindValue(':codigo',$this->codigo,PDO::PARAM_STR);
         $consulta->bindValue(':codigo_mesa',$this->codigo_mesa,PDO::PARAM_STR);
-        $consulta->bindValue(':estado',$this->estado,PDO::PARAM_STR);
+        $consulta->bindValue(':estado',$this->estado,PDO::PARAM_INT);
         $consulta->bindValue(':id_producto',$this->id_producto,PDO::PARAM_INT);
         $consulta->bindValue(':cantidad',$this->cantidad,PDO::PARAM_INT);
         $consulta->bindValue(':id_mozo',$this->id_mozo,PDO::PARAM_INT);
@@ -47,6 +47,21 @@ class Pedido{
         $consulta = $objetoAccesoDato->RetornarConsulta("select * from pedido where codigo=:codigo");
         $consulta->bindValue(':codigo',$codigo,PDO::PARAM_STR);
         return $consulta->execute()? $consulta->fetchObject("Pedido"):null;		
+    }    
+    static function PendidosPorIdMozo($id_mozo){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("select * from pedido where id_mozo=:id_mozo");
+        $consulta->bindValue(':id_mozo',$id_mozo,PDO::PARAM_INT);
+        return $consulta->execute()? $consulta->fetchAll(PDO::FETCH_CLASS, "pedido"):null;
+    }
+    static function PendientesPorSector($sector){
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $sql = "select * ,(select producto.id from producto where producto.sector=:sector 
+        && producto.id = id_producto) from pedido where estado = :estado";
+        $consulta = $objetoAccesoDato->RetornarConsulta($sql);
+        $consulta->bindValue(':sector',$sector,PDO::PARAM_INT);
+        $consulta->bindValue(':estado',0,PDO::PARAM_INT);
+        return $consulta->execute()? $consulta->fetchAll(PDO::FETCH_CLASS, "pedido"):null;
     }
 }
 ?>

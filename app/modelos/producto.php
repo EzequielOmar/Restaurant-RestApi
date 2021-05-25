@@ -22,7 +22,7 @@ class Producto{
         VALUES (:nombre,:descripcion,:sector,:precio,:stock)");
         $consulta->bindValue(':nombre',$this->nombre,PDO::PARAM_STR);
         $consulta->bindValue(':descripcion',$this->descripcion,PDO::PARAM_STR);
-        $consulta->bindValue(':sector',$this->sector,PDO::PARAM_STR);
+        $consulta->bindValue(':sector',$this->sector,PDO::PARAM_INT);
         $consulta->bindValue(':precio',$this->precio,PDO::PARAM_STR);
         $consulta->bindValue(':stock',$this->stock,PDO::PARAM_INT);
         return $consulta->execute();

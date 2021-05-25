@@ -9,23 +9,18 @@ class Validar{
     private static function HashClave(string $clave){
         return hash("sha1",$clave);
     }
-    private static function ChequearSector(string $sector){
-        switch($sector){
-            case "bar":case "cerveza":case "cocina":case "mozo":case "socio":
-                return true;
-        }
-    }
     private static function ChequearPedido(Pedido $ped){
         if(!ctype_alnum($ped->codigo)||strlen($ped->codigo) != 5)
             return "No corresponde el formato del código.";
         $mesa = Mesa::ObtenerPorCodigo($ped->codigo_mesa);
-        if(empty($mesa)||$mesa->estado == "cerrada")
-            return "No existe una mesa con ese código.";
+        if(empty($mesa)||$mesa->estado == 3)
+            return "Lo siento. No tenemos mesa disponible.";
         $prod = Producto::ObtenerPorID($ped->id_producto);
         if(empty($prod)||$prod->stock<$ped->cantidad){
-            var_dump($prod);
-            var_dump($ped->cantidad);
             return "No tenemos stock para realizar el pedido.";}
+        /*
+        BUSCAR UN MOZO LIBRE Y ASIGNAR AUTOMATICAMENTE
+        */
         $mozo = Staff::ObtenerPorID($ped->id_mozo);
         if(empty($mozo)||$mozo->sector != "mozo")
             return "No hay personal para tomar el pedido.";
@@ -47,13 +42,13 @@ class Validar{
         $stf->nombre=ucwords(strtolower(trim($nombre)));
         $stf->apellido=ucwords(strtolower(trim($apellido)));
         $stf->setClave(self::HashClave($clave));
-        $stf->sector=strtolower(trim($sector));
+        $stf->sector=trim($sector);
         $dt = new DateTime("now",new DateTimeZone("America/Argentina/Buenos_Aires"));
         $stf->fecha_ing = $dt->format('Y-m-d H-i-s');
         $stf->estado = "activo";
         if(!is_numeric($stf->dni)||!ctype_alpha($stf->nombre)||!ctype_alpha($stf->apellido))
             return "Error, formato incorrecto.";
-        if(!self::ChequearSector($stf->sector))
+        if($stf->sector<1 || $stf->sector>5)
             return "No corresponde el sector.";
         if(Staff::ObtenerPorDni($stf->dni))
             return "Ya existe el empleado con dni nro. ".$stf->dni.".";
@@ -97,17 +92,17 @@ class Validar{
         $sector= $params['sector'] ?? null;
         $precio= $params['precio'] ?? null;
         $stock= $params['stock'] ?? null;
-        if(empty($nombre)||empty($descripcion)||empty($sector)||empty($precio)||empty($stock))
+        if(empty($nombre)||empty($descripcion)||empty($precio)||empty($stock)||empty($sector))
             return "Error, datos faltantes.";
         $prod = new Producto();
         $prod->nombre=ucfirst(strtolower(trim($nombre)));
         $prod->descripcion=ucfirst(strtolower(trim($descripcion)));
-        $prod->sector=strtolower(trim($sector));
+        $prod->sector=trim($sector);
         $prod->precio = '$'.str_replace(',','.',$precio);
         $prod->stock = $stock;
         if(!is_numeric($precio)||!is_numeric($stock))
             return "Error de formato al cargar datos";
-        if(!self::ChequearSector($prod->sector))
+        if($prod->sector<1 || $prod->sector>5)
             return "No corresponde el sector.";
         if(Producto::ObtenerPorNombre($prod->nombre))
             return "Ya existe un producto con el nombre: ".$prod->nombre.".";
@@ -129,11 +124,11 @@ class Validar{
         $ped = new Pedido();
         $ped->codigo = trim($codigo);
         $ped->codigo_mesa = trim($codigo_mesa);
-        $ped->estado = "comandado";
+        $ped->estado=0;
         $ped->id_producto = $id_producto;
         $ped->cantidad = $cantidad;
         $ped->id_mozo = $id_mozo;
-        $ped->id_elaborador = 0;
+        $ped->id_elaborador=0;
         $dt = new DateTime("now",new DateTimeZone("America/Argentina/Buenos_Aires"));
         $ped->fecha = $dt->format('Y-m-d');
         $ped->hora_comandado = $dt->format('H:i:s');
@@ -149,12 +144,13 @@ class Validar{
      * los valida, y retorna una Mesa con los datos, o un string con el error.
      */
     public static function Mesa($params){
+        //GENERAR CODIGO ALEATORIO, NO RECIBE PARAMETROS EL CREAR MESA.
         $codigo= $params['codigo']?? null;
         if(empty($codigo))
             return "Error, datos faltantes.";
         $mesa = new Mesa();
         $mesa->codigo=trim($codigo);
-        $mesa->estado="abierta";
+        $mesa->estado=0;
         if(!ctype_alnum($mesa->codigo)||strlen($mesa->codigo) != 5)
             return "No corresponde el formato código.";
         if(Mesa::ObtenerPorCodigo($mesa->codigo))
@@ -170,7 +166,7 @@ class Validar{
         $clave= $params['clave'] ?? null;
         $cli = Cliente::ObtenerPorMail($mail);
         if(empty($cli))
-            return "No existe un usuario con ese mail. Regístrese.";
+            return "No existe un cliente con ese mail. Regístrese.";
         if($cli->clave != Validar::HashClave($clave))
             return "Contraseña incorrecta.";
         return $cli; 
@@ -184,7 +180,7 @@ class Validar{
         $clave= $params['clave'] ?? null;
         $staff = Staff::ObtenerPorDni($dni);
         if(empty($staff))
-            return "No existe un usuario con ese mail. Regístrese.";
+            return "No existe un staff con ese dni. Regístrese.";
         if($staff->clave != Validar::HashClave($clave))
             return "Contraseña incorrecta.";
         return $staff; 

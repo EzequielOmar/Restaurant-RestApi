@@ -33,7 +33,7 @@ class Staff{
         $consulta->bindValue(':nombre',$this->nombre,PDO::PARAM_STR);
         $consulta->bindValue(':apellido',$this->apellido,PDO::PARAM_STR);
         $consulta->bindValue(':clave',$this->getClave(),PDO::PARAM_STR);
-        $consulta->bindValue(':sector',$this->sector,PDO::PARAM_STR);
+        $consulta->bindValue(':sector',$this->sector,PDO::PARAM_INT);
         $consulta->bindValue(':fecha_ing',$this->fecha_ing,PDO::PARAM_STR);
         $consulta->bindValue(':estado',$this->estado,PDO::PARAM_STR);
         return $consulta->execute();

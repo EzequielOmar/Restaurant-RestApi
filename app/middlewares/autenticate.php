@@ -2,24 +2,28 @@
 require_once 'middleware.php';
 require_once './utiles/token.php';
 
-class Autenticate extends Middleware{
+/**
+ * Chequea que el usuario (cliente o staff) esté logueado mediante JWT,
+ * si el token es invalido, redirecciona al login corresponiente. 
+ */
+class AuthMW extends Middleware{
     public function __construct($router){
         parent::__construct($router);
     }
 
-    public function __invoke($request, $response, $next){
+    public function __invoke($req, $res, $next){
         try{
             if(!empty($_SESSION['token'])){
                 Token::Verificar($_SESSION['token']);
-                $data = Token::ObtenerData($_SESSION['token']);
-                $response = $next($request, $response);
-                $response->getBody()->write('Bienvenido/a '.$data->nombre);
-                return $response;
+                $res = $next($req, $res);
+                return $res;
             }
         }catch(Exception $e){
-            echo('Error en token: '.$e->getMessage());
+            return $res->withJson("Su sesión ha expirado. Por favor, loguearse nuevamente.",200);
         }
-        return $response->withRedirect($this->router->pathFor('login'),303);
+        if( str_contains($req->getUri()->getPath(),"staff"))
+            return $res->withRedirect($this->router->pathFor('staff-login'),303);
+        return $res->withRedirect($this->router->pathFor('login'),303);
     }
 }
 ?>

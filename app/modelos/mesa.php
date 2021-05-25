@@ -16,7 +16,7 @@ class Mesa{
         $consulta = $objetoAccesoDato->RetornarConsulta("
         INSERT INTO mesa(codigo,estado) VALUES (:codigo,:estado)");
         $consulta->bindValue(':codigo',$this->codigo,PDO::PARAM_STR);
-        $consulta->bindValue(':estado',$this->estado,PDO::PARAM_STR);
+        $consulta->bindValue(':estado',$this->estado,PDO::PARAM_INT);
         return $consulta->execute();
     }
     static function ObtenerPorCodigo($codigo_mesa){
