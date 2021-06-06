@@ -1,11 +1,36 @@
 <?php
 require_once './interfaces/IApiUsable.php';
 include_once './utiles/hash.php';
+include_once './utiles/enum.php';
 
+use App\Models\Mesa;
 use \App\Models\Staff as Staff;
 
 class staffApi implements IApiUsable
 {
+    private static $nro_max_MesasPorMozo = 5;
+
+    private static function AsignarMesasAMozos()
+    {
+        $mozosDisponibles = Staff::where('sector', '=', Sector::mozo)
+            ->where('estado', '=', EstadoDeStaff::disponible)->get()->all();
+        foreach ($mozosDisponibles as $mozo) {
+            $asignadas = Mesa::where('id_mozo_asignado', '=', $mozo->id)->count();
+            while ($asignadas < self::$nro_max_MesasPorMozo) {
+                $mesaLibre = Mesa::where('estado', '=', EstadoDeMesa::abierta)
+                    ->where('id_mozo_asignado', '=', 0)->take(1)->get();
+                if ($mesaLibre->isEmpty())
+                    break;
+                $mesaLibre[0]->id_mozo_asignado = $mozo->id;
+                $mesaLibre[0]->save();
+                $asignadas++;
+            }
+            if($asignadas == self::$nro_max_MesasPorMozo){
+                $mozo->estado = EstadoDeStaff::ocupado;
+                $mozo->save;
+            }
+        }
+    }
 
     private static function Validar($params)
     {
@@ -24,7 +49,7 @@ class staffApi implements IApiUsable
         $stf->sector = trim($sector);
         $dt = new DateTime("now", new DateTimeZone("America/Argentina/Buenos_Aires"));
         $stf->fecha_ing = $dt->format('Y-m-d H-i-s');
-        $stf->estado = "activo";
+        $stf->estado = 3;
         if (!is_numeric($stf->dni) || strlen($stf->dni) != 8 || !ctype_alpha($stf->nombre) || !ctype_alpha($stf->apellido))
             throw new Exception("Error, formato incorrecto.");
         if ($stf->sector < 1 || $stf->sector > 5)
@@ -38,8 +63,9 @@ class staffApi implements IApiUsable
     {
         $dni = $params['dni'] ?? null;
         $clave = $params['clave'] ?? null;
-        $staff = Staff::where('dni', '=', $dni)->firstOrFail();
-        //        return "No existe un staff con ese dni. Regístrese.";
+        $staff = Staff::where('dni', '=', $dni)->first();
+        if (!$staff)
+            throw new Exception("No existe un staff con ese dni. Regístrese.");
         if ($staff->clave != HashClave($clave))
             throw new Exception("Contraseña incorrecta.");
         return $staff;
@@ -52,7 +78,7 @@ class staffApi implements IApiUsable
     public function TraerTodos($req, $res, $args)
     {
         $lista = Staff::all();
-        return $res->withJson(json_encode(array("personal" => $lista)),200)
+        return $res->withJson(json_encode(array("personal" => $lista)), 200)
             ->withHeader('Content-Type', 'application/json');
     }
     public function CargarUno($req, $res, $args)
@@ -79,6 +105,8 @@ class staffApi implements IApiUsable
     {
         try {
             $staff = self::ValidarLog($req->getParsedBody());
+            $staff->estado = EstadoDeStaff::disponible;
+            $staff->save();
             $data = array(
                 'id' => $staff->id,
                 'dni' => $staff->dni,
@@ -86,6 +114,7 @@ class staffApi implements IApiUsable
                 'sector' => $staff->sector
             );
             $_SESSION['token'] = Token::Crear($data);
+            self::AsignarMesasAMozos();
         } catch (Exception $e) {
             return $res->withJson("Error:" . $e->getMessage(), 400)
                 ->withHeader('Content-Type', 'application/json');

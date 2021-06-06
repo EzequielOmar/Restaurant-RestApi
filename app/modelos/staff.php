@@ -16,4 +16,19 @@ class Staff extends Model
     protected $fillable = [
         'dni', 'nombre', 'apellido', 'clave', 'sector', 'fecha_ing', 'estado', 'fecha_baja'
     ];
+
+    public function mesas()
+    {
+        return $this->hasMany(Mesa::class,'id_mozo_asignado','id');
+    }
+
+    public function pedidosMozo()
+    {
+        return $this->hasMany(Pedido::class,'id_mozo','id');
+    }
+
+    public function pedidosElaborador()
+    {
+        return $this->hasMany(Pedido::class,'id_elaborador','id');
+    }
 }

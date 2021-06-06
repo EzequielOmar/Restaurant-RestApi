@@ -25,4 +25,9 @@ class Cliente extends Model
         'fecha_modif',
         'fecha_baja'
     ];
+
+    public function facturas()
+    {
+        return $this->hasMany(Factura::class,'id_cliente','id');
+    }
 }

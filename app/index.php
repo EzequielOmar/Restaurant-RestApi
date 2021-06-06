@@ -53,6 +53,21 @@ $capsule->addConnection([
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
+/*
+use App\Models\Cliente;
+use App\Models\Staff;
+use App\Models\Pedido;
+use App\Models\Producto;
+use App\Models\Mesa;
+Cliente::truncate();
+Pedido::truncate();
+Staff::truncate();
+Producto::truncate();
+Mesa::truncate();
+//LIMPIAR TABLAS Y REINICIAR IDS
+var_dump(Staff::find(1)->mesa);
+*/
+
 //routes
 //Sector publico de la app
 $app->group('', function () {

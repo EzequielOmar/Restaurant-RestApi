@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
-class Pedido extends Model{
+class Pedido extends Model
+{
     use SoftDeletingTrait;
     protected $primaryKey = 'id';
     protected $table = 'pedido';
@@ -28,5 +29,29 @@ class Pedido extends Model{
         'hora_entregado',
         'hora_cierre'
     ];
+
+    public function mesa()
+    {
+        return $this->hasOne(Mesa::class, 'codigo', 'codigo_mesa');
+    }
+
+    public function producto()
+    {
+        return $this->hasOne(Producto::class, 'id', 'id_producto');
+    }
+
+    public function mozo()
+    {
+        return $this->hasOne(Staff::class, 'id', 'id_mozo');
+    }
+
+    public function elaborador()
+    {
+        return $this->hasOne(Staff::class, 'id', 'id_elaborador');
+    }
+
+    public function factura()
+    {
+        return $this->hasOne(Factura::class, 'id_pedido', 'id');
+    }
 }
-?>

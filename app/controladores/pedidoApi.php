@@ -11,11 +11,11 @@ require_once './modelos/mesa.php';
 require_once './modelos/staff.php';
 require_once './modelos/producto.php';
 include_once './utiles/alfanum.php';
+include_once './utiles/enum.php';
 
 class PedidoApi implements IApiUsable
 {
     static public $path_fotos = "./uploads/";
-
 
     private static function ChequearStock($idProd, $cantPedida)
     {
@@ -26,7 +26,7 @@ class PedidoApi implements IApiUsable
 
     private static function AsignarMesaYMozo()
     {
-        $mesasLibres = Mesa::where('estado', '=', 1)->get();
+        $mesasLibres = Mesa::where('estado', '=', EstadoDeMesa::abierta)->get();
         if ($mesasLibres->isEmpty())
             throw new Exception("Lo siento, nos quedamos sin mesas disponibles.");
         $mesaAsignada = $mesasLibres->filter(function ($mesa) {
@@ -73,7 +73,7 @@ class PedidoApi implements IApiUsable
                 $pedido->codigo = $codigo;
                 $pedido->codigo_mesa = $mesaAsignada;
                 $pedido->id_mozo = $mozoAsignado;
-                $pedido->estado = 1;
+                $pedido->estado = EstadoDePedido::comandado;
                 array_push($pedidos, $pedido);
             }
         } catch (Exception $e) {
