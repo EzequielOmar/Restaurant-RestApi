@@ -1,34 +1,44 @@
 <?php
-require_once './modelos/mesa.php';
+
+use App\Models\Mesa;
+
 require_once './interfaces/IApiUsable.php';
+require_once './modelos/mesa.php';
+include_once './utiles/alfanum.php';
 
-class MesaApi extends Mesa implements IApiUsable
+class MesaApi implements IApiUsable
 {
- 	public function TraerUno($request, $response, $args) {
-     	return;
-    }
-    public function TraerTodos($request, $response, $args) {
-      	$mesas = Mesa::GetArrayObj();
-        if(is_null($mesas))
-            return $response->withJson("Error al obtener datos de la base de datos\n",500);
-    	return count($mesas) > 0 ?
-            $response->withJson($mesas , 200):
-            $response->withJson("No existe ningún mesa en la lista\n",204);
-    }
-    public function CargarUno($request, $response, $args) {
-		$elem = Validar::Mesa($request->getParsedBody());
-		if(is_string($elem))
-			return $response->withJson($elem,400);
-        return $elem->GuardarBD()? 
-            $response->withJson("Operación (alta de mesa) exitosa.\n",201):
-            $response->withJson("Error, operación (alta de mesa) fallida.\n",500);
-    }
-    public function BorrarUno($request, $response, $args) {
+    /**
+     * HACER LOGICA DE ASIGNAR MESAS A MOZOS
+     * , LLAMAR DESPUES DE AGREGAR CADA MESA.
+     */
+    public function TraerUno($req, $res, $args)
+    {
         return;
     }
-    public function ModificarUno($request, $response, $args) {
+    public function TraerTodos($req, $res, $args)
+    {
+        $lista = Mesa::all();
+        $res->getBody()->write(json_encode(array("mesas" => $lista)));
+        return $res->withStatus(200)
+            ->withHeader('Content-Type', 'application/json');
+    }
+    public function CargarUno($req, $res, $args)
+    {
+        $mesa = new Mesa();
+        $mesa->codigo = GenerarCodigoAlfanumerico();
+        $mesa->estado = 1;
+        $mesa->id_mozo_asignado = 0;
+        $mesa->save();
+        return $res->withJson(json_encode(array("mensaje" => "Alta de mesa exitosa.")), 201)
+            ->withHeader('Content-Type', 'application/json');
+    }
+    public function BorrarUno($req, $res, $args)
+    {
         return;
     }
-
-
+    public function ModificarUno($req, $res, $args)
+    {
+        return;
+    }
 }
