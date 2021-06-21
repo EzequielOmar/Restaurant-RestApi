@@ -31,7 +31,6 @@ class staffApi implements IApiUsable
             }
         }
     }
-
     private static function Validar($params)
     {
         $dni = $params['dni'] ?? null;
@@ -58,7 +57,6 @@ class staffApi implements IApiUsable
             throw new Exception("Ya existe el empleado con dni nro. " . $stf->dni . ".");
         return $stf;
     }
-
     private static function ValidarLog($params)
     {
         $dni = $params['dni'] ?? null;
@@ -70,7 +68,6 @@ class staffApi implements IApiUsable
             throw new Exception("Contraseña incorrecta.");
         return $staff;
     }
-
     public function TraerUno($req, $res, $args)
     {
         return;
@@ -103,6 +100,10 @@ class staffApi implements IApiUsable
     }
     public function Loguear($req, $res, $args)
     {
+        if ($req->isGet()) {
+            return $res->withJson(json_encode(array("Mensaje" => "Login para nuestro staff. Si no trabajas con nosotros estas en el sitio equivocado.")), 200)
+                ->withHeader('Content-Type', 'application/json');
+        }
         try {
             $staff = self::ValidarLog($req->getParsedBody());
             $staff->estado = EstadoDeStaff::disponible;
@@ -113,7 +114,8 @@ class staffApi implements IApiUsable
                 'nombre' => $staff->nombre,
                 'sector' => $staff->sector
             );
-            $_SESSION['token'] = Token::Crear($data);
+            $token = Token::Crear($data);
+            setcookie ("token",$token,time()+360,"/");//6min
             self::AsignarMesasAMozos();
         } catch (Exception $e) {
             return $res->withJson("Error:" . $e->getMessage(), 400)

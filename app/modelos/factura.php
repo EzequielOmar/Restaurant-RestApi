@@ -10,7 +10,7 @@ class Factura extends Model{
     public $incrementing = true;
     public $timestamps = false;
     protected $fillable = [
-        'id_mesa', 'id_pedido', 'id_cliente', 'monto', 'fecha'
+        'id_mesa', 'codigo_pedido', 'id_cliente', 'monto', 'fecha'
     ];
 
     public function mesa()
@@ -20,7 +20,7 @@ class Factura extends Model{
 
     public function pedido()
     {
-        return $this->hasOne(Pedido::class,'id','id_pedido');
+        return $this->hasOne(Pedido::class,'codigo','codigo_pedido');
     }
     
     public function cliente()

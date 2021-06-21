@@ -36,7 +36,9 @@ class ProductoApi implements IApiUsable
     }
     public function TraerTodos($req, $res, $args)
     {
-        $productos = Producto::all();
+        $productos = Producto::get()->all();
+        if(!$productos)
+            $productos = "Lo siento, no tenemos productos a disposición. No sé para que abrimos hoy.";
         return $res->withJson(json_encode(array("productos" => $productos)), 200)
             ->withHeader('Content-Type', 'application/json');
     }

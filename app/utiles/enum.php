@@ -1,4 +1,10 @@
 <?php
+abstract class Tipo
+{
+    const cliente = 1;
+    const staff = 2;
+}
+
 abstract class Sector
 {
     const socio = 1;
