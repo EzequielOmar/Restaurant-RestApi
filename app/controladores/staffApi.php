@@ -9,27 +9,12 @@ use \App\Models\Staff as Staff;
 class staffApi implements IApiUsable
 {
     private static $nro_max_MesasPorMozo = 5;
+    private static $largo_dni = 8;
 
-    private static function AsignarMesasAMozos()
+    private static function AsignarMesasAMozos($mozo_id)
     {
-        $mozosDisponibles = Staff::where('sector', '=', Sector::mozo)
-            ->where('estado', '=', EstadoDeStaff::disponible)->get()->all();
-        foreach ($mozosDisponibles as $mozo) {
-            $asignadas = Mesa::where('id_mozo_asignado', '=', $mozo->id)->count();
-            while ($asignadas < self::$nro_max_MesasPorMozo) {
-                $mesaLibre = Mesa::where('estado', '=', EstadoDeMesa::abierta)
-                    ->where('id_mozo_asignado', '=', 0)->take(1)->get();
-                if ($mesaLibre->isEmpty())
-                    break;
-                $mesaLibre[0]->id_mozo_asignado = $mozo->id;
-                $mesaLibre[0]->save();
-                $asignadas++;
-            }
-            if($asignadas == self::$nro_max_MesasPorMozo){
-                $mozo->estado = EstadoDeStaff::ocupado;
-                $mozo->save;
-            }
-        }
+        Mesa::where('estado', '=', EstadoDeMesa::abierta)->where('id_mozo_asignado', '=', 0)
+            ->limit(self::$nro_max_MesasPorMozo)->update(['id_mozo_asignado' => $mozo_id]);
     }
     private static function Validar($params)
     {
@@ -49,13 +34,32 @@ class staffApi implements IApiUsable
         $dt = new DateTime("now", new DateTimeZone("America/Argentina/Buenos_Aires"));
         $stf->fecha_ing = $dt->format('Y-m-d H-i-s');
         $stf->estado = 3;
-        if (!is_numeric($stf->dni) || strlen($stf->dni) != 8 || !ctype_alpha($stf->nombre) || !ctype_alpha($stf->apellido))
+        if (!is_numeric($stf->dni) || strlen($stf->dni) != self::$largo_dni || !ctype_alpha($stf->nombre) || !ctype_alpha($stf->apellido))
             throw new Exception("Error, formato incorrecto.");
         if ($stf->sector < 1 || $stf->sector > 5)
             throw new Exception("No corresponde el sector.");
         if (!Staff::where('dni', '=', $stf->dni)->get()->isEmpty())
             throw new Exception("Ya existe el empleado con dni nro. " . $stf->dni . ".");
         return $stf;
+    }
+    private static function ValidarModif($params, $id)
+    {
+        $modif = Staff::find($id);
+        if (!$modif)
+            throw new Exception("El id ingresado no pertenece a un empleado existente.");
+        $dni = $params['dni'] ?? $modif->dni;
+        $nombre = $params['nombre'] ?? $modif->nombre;
+        $apellido = $params['apellido'] ?? $modif->apellido;
+        $sector = $params['sector'] ?? $modif->sector;
+        $modif->dni = str_replace('.', '', trim($dni));
+        $modif->nombre = ucwords(strtolower(trim($nombre)));
+        $modif->apellido = ucwords(strtolower(trim($apellido)));
+        $modif->sector = trim($sector);
+        if (!is_numeric($modif->dni) || strlen($modif->dni) != self::$largo_dni || !ctype_alpha($modif->nombre) || !ctype_alpha($modif->apellido))
+            throw new Exception("Error, formato incorrecto.");
+        if ($modif->sector < 1 || $modif->sector > 5)
+            throw new Exception("No corresponde el sector.");
+        return $modif;
     }
     private static function ValidarLog($params)
     {
@@ -70,12 +74,18 @@ class staffApi implements IApiUsable
     }
     public function TraerUno($req, $res, $args)
     {
-        return;
+        $stf = Staff::find($args['id']);
+        if (!$stf)
+            $stf = "No se encontró el id " . $args['id']  . ".";
+        $res->getBody()->write(json_encode(array("Staff: " . $args['id'] => $stf)));
+        return $res->withStatus(200)
+            ->withHeader('Content-Type', 'application/json');
     }
     public function TraerTodos($req, $res, $args)
     {
         $lista = Staff::all();
-        return $res->withJson(json_encode(array("personal" => $lista)), 200)
+        $res->getBody()->write(json_encode(array("personal" => $lista)));
+        return $res->withStatus(200)
             ->withHeader('Content-Type', 'application/json');
     }
     public function CargarUno($req, $res, $args)
@@ -87,23 +97,46 @@ class staffApi implements IApiUsable
             return $res->withJson("Error:" . $e->getMessage(), 400)
                 ->withHeader('Content-Type', 'application/json');
         }
-        return $res->withJson(json_encode(array("mensaje" => "Alta de staff exitosa.")), 201)
+        $res->getBody()->write(json_encode(array("mensaje" => "Alta de staff exitosa.")));
+        return $res->withStatus(201)
             ->withHeader('Content-Type', 'application/json');
     }
     public function BorrarUno($req, $res, $args)
     {
-        return;
+        $stf = Staff::find($args['id']);
+        try {
+            if (!$stf)
+                throw new Exception("No se encontró el id " . $args['id']  . ".");
+            $stf->estado = EstadoDeStaff::baja;
+            if (!$stf->save() || !$stf->delete())
+                throw new Exception("Error de sistema, el dato no se eliminó.");
+        } catch (Exception $e) {
+            return $res->withJson("Error:" . $e->getMessage(), 400)->withHeader('Content-Type', 'application/json');
+        }
+        $res->getBody()->write(json_encode(array("Mensaje" => "Se eliminó: " . $stf->nombre . ".")));
+        return $res->withStatus(400)->withHeader('Content-Type', 'application/json');
     }
     public function ModificarUno($req, $res, $args)
     {
-        return;
+        try {
+            $modif = self::ValidarModif($req->getParsedBody(), $args['id']);
+            if (!$modif->isDirty())
+                throw new Exception("No se han realizado modificaciones.");
+            if (!$modif->save())
+                throw new Exception("Lo siento. Error interno del sistema al intentar modificar los datos.");
+        } catch (Exception $e) {
+            return $res->withJson(json_encode(array("Error:" => $e->getMessage())), 400)
+                ->withHeader('Content-Type', 'application/json');;
+        }
+        $res->getBody()->write(json_encode(array("Éxito:" => $modif->nombre . " modificado correctamente.")));
+        return $res->withStatus(200)
+            ->withHeader('Content-Type', 'application/json');
     }
     public function Loguear($req, $res, $args)
     {
-        if ($req->isGet()) {
+        if ($req->isGet())
             return $res->withJson(json_encode(array("Mensaje" => "Login para nuestro staff. Si no trabajas con nosotros estas en el sitio equivocado.")), 200)
                 ->withHeader('Content-Type', 'application/json');
-        }
         try {
             $staff = self::ValidarLog($req->getParsedBody());
             $staff->estado = EstadoDeStaff::disponible;
@@ -115,16 +148,18 @@ class staffApi implements IApiUsable
                 'sector' => $staff->sector
             );
             $token = Token::Crear($data);
-            setcookie ("token",$token,time()+360,"/");//6min
-            self::AsignarMesasAMozos();
+            setcookie("token", $token, time() + 360, "/"); //6min
+            if ($staff->sector == Sector::mozo)
+                self::AsignarMesasAMozos($staff->id);
         } catch (Exception $e) {
             return $res->withJson("Error:" . $e->getMessage(), 400)
                 ->withHeader('Content-Type', 'application/json');
         }
-        return $res->withJson(json_encode(
+        $res->getBody()->write(json_encode(
             array(
-                "mensaje" => "Logueo exitoso. Bienvenido " . $staff->nombre
+                "Mensaje" => "Logueo exitoso. Buona giornata! " . $staff->nombre
             )
-        ), 201)->withHeader('Content-Type', 'application/json');
+        ));
+        return $res->withStatus(201)->withHeader('Content-Type', 'application/json');
     }
 }

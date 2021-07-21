@@ -3,6 +3,7 @@
 use App\Controllers\Container;
 use App\Models\Comentario;
 use App\Models\Factura;
+use App\Models\Pedido;
 
 require_once './modelos/factura.php';
 require_once './modelos/comentario.php';
@@ -47,33 +48,37 @@ class cierreApi extends Container
      */
     public function CargarUno($req, $res, $args)
     {
-        $data = $req->getParams();
         if ($req->isGet()) {
-            $id_factura = $data["id_factura"];
-            if (!$id_factura)
-                return $res->withJson(json_encode(
+            $id_factura = $req->getParams()["id_factura"] ?? null;
+            if (!$id_factura) {
+                $res->getBody()->write(json_encode(
                     array(
                         "Mensaje" => "Sentimos que haya tenido que cancelar su pedido. 
                         Por favor, complete el formulario y háganos saber su opinión."
                     )
-                ), 200)->withHeader('Content-Type', 'application/json');
-            return $res->withJson(json_encode(
+                ));
+                return $res->withStatus(200)->withHeader('Content-Type', 'application/json');
+            }
+            $res->getBody()->write(json_encode(
                 array(
-                    "Mensaje" => "Gracias! Ojalá lo haya disfrutado. " . $req->getAttribute('rate_rest') .
+                    "Mensaje" => "Gracias! Ojalá lo haya disfrutado. " . $req->getAttribute('nombre') .
                         ", no te vallas sin dejarnos tu comentario.",
                     "Factura" => Factura::find($id_factura)
                 )
-            ), 200)->withHeader('Content-Type', 'application/json');
+            ));
+            return $res->withStatus(200)->withHeader('Content-Type', 'application/json');
         }
         //post
         try {
-            $coment = self::Validar($req->getParsedBody(), $data["id_mesa"]);
+            $ultimoPedido = Pedido::onlyTrashed()->where('id_cliente', '=', $req->getAttribute('id'))->get()->last();
+            $coment = self::Validar($req->getParsedBody(), $ultimoPedido->mesa->id);
             $coment->save();
         } catch (Exception $e) {
             return $res->withJson("Error:" . $e->getMessage(), 400)
                 ->withHeader('Content-Type', 'application/json');
         }
-        return $res->withJson(json_encode(array("Mensaje" => "Gracias por dejarnos tu opinión.")), 201)
+        $res->getBody()->write(json_encode(array("Mensaje" => "Gracias por dejarnos tu opinión.")));
+        return $res->withStatus(201)
             ->withHeader('Content-Type', 'application/json');
     }
 }

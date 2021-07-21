@@ -19,6 +19,7 @@ class Pedido extends Model
         'estado',
         'id_producto',
         'cantidad',
+        'id_cliente',
         'id_mozo',
         'id_elaborador',
         'fecha',
@@ -40,6 +41,11 @@ class Pedido extends Model
         return $this->hasOne(Producto::class, 'id', 'id_producto');
     }
 
+    public function cliente()
+    {
+        return $this->hasOne(Cliente::class, 'id', 'id_cliente');
+    }
+
     public function mozo()
     {
         return $this->hasOne(Staff::class, 'id', 'id_mozo');
@@ -52,6 +58,6 @@ class Pedido extends Model
 
     public function factura()
     {
-        return $this->hasOne(Factura::class, 'id_pedido', 'id');
+        return $this->belongsTo(Factura::class, 'id_pedido');
     }
 }

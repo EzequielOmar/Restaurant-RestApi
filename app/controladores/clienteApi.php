@@ -2,11 +2,10 @@
 
 use App\Models\Cliente;
 
-require_once './interfaces/IApiUsable.php';
 require_once './modelos/cliente.php';
 include_once './utiles/hash.php';
 
-class clienteApi implements IApiUsable
+class clienteApi 
 {
     private static function Validar($params)
     {
@@ -55,14 +54,16 @@ class clienteApi implements IApiUsable
     public function TraerTodos($req, $res, $args)
     {
         $lista = Cliente::all();
-        return $res->withJson(json_encode(array("clientes" => $lista)), 200)
+        $res->getBody()->write(json_encode(array("clientes" => $lista)));
+        return $res->withStatus(200)
             ->withHeader('Content-Type', 'application/json');
     }
 
     public function CargarUno($req, $res, $args)
     {
         if ($req->isGet()) {
-            return $res->withJson(json_encode(array("Mensaje" => "Bienvenido a Comanda. Registre sus datos para ingresar.")), 200)
+            $res->getBody()->write(json_encode(array("Mensaje" => "Bienvenido a Comanda. Registre sus datos para ingresar.")));
+            return $res->withStatus(200)
                 ->withHeader('Content-Type', 'application/json');
         }
         try {
@@ -71,25 +72,17 @@ class clienteApi implements IApiUsable
         } catch (Exception $e) {
             return $res->withJson("Error:" . $e->getMessage(), 400);
         }
-        return $res->withJson(json_encode(
+        $res->getBody()->write(json_encode(
             array("mensaje" => "Registro exitoso. ¡Bienvenid@ " . $cliente->nombre . "!")
-        ), 201)->withHeader('Content-Type', 'application/json');
-    }
-
-    public function BorrarUno($req, $res, $args)
-    {
-        return;
-    }
-
-    public function ModificarUno($req, $res, $args)
-    {
-        return;
+        ));
+        return $res->withStatus(201)->withHeader('Content-Type', 'application/json');
     }
 
     public function Loguear($req, $res, $args)
     {
         if ($req->isGet()) {
-            return $res->withJson(json_encode(array("Mensaje" => "Por favor, ingrese los datos para realizar el login.")), 200)
+            $res->getBody()->write(json_encode(array("Mensaje" => "Por favor, ingrese los datos para realizar el login.")));
+            return $res->withStatus(200)
                 ->withHeader('Content-Type', 'application/json');
         }
         try {
@@ -101,12 +94,13 @@ class clienteApi implements IApiUsable
                 'cel' => $cliente->cel
             );
             $token = Token::Crear($data);
-            setcookie ("token",$token,time()+360,"/");//6min
+            setcookie("token", $token, time() + 360, "/"); //6min
         } catch (Exception $e) {
             return $res->withJson("Error:" . $e->getMessage(), 400);
         }
-        return $res->withJson(json_encode(
+        $res->getBody()->write(json_encode(
             array("mensaje" => "Logueo exitoso. ¿Cómo has estado, " . $cliente->nombre . "?")
-        ), 201)->withHeader('Content-Type', 'application/json');
+        ));
+        return $res->withStatus(201)->withHeader('Content-Type', 'application/json');
     }
 }
