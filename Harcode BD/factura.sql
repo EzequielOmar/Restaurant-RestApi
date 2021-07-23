@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 21-06-2021 a las 22:17:25
+-- Tiempo de generación: 22-07-2021 a las 16:12:31
 -- Versión del servidor: 8.0.13-4
--- Versión de PHP: 7.2.24-0ubuntu0.18.04.7
+-- Versión de PHP: 7.2.24-0ubuntu0.18.04.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -42,16 +42,15 @@ CREATE TABLE `factura` (
 --
 
 INSERT INTO `factura` (`id`, `id_mesa`, `codigo_pedido`, `id_cliente`, `monto`, `fecha`) VALUES
-(10, 10, 'rohiZ', 8, '$8367.20', '2020-09-15 00:00:00'),
-(11, 11, 'AsFrI', 9, '$7223.37', '2021-01-22 00:00:00'),
-(12, 8, '7ZOrA', 4, '$60.78', '2021-04-11 00:00:00'),
-(13, 6, 'TQ5zr', 2, '$4759.15', '2020-12-24 00:00:00'),
-(14, 2, 'U9Z8W', 6, '$1114.02', '2020-10-31 00:00:00'),
-(15, 12, 'lamXe', 8, '$1331.35', '2020-12-27 00:00:00'),
-(16, 7, 'fRGpk', 3, '$3134.53', '2021-01-22 00:00:00'),
-(17, 9, 'MgUWx', 4, '$8878.11', '2021-03-06 00:00:00'),
-(18, 7, 'osoxK', 3, '$8219.94', '2021-05-28 00:00:00'),
-(19, 8, 'M0QZg', 9, '$1006.24', '2021-04-13 00:00:00');
+(1, 7, 'oh4U1', 5, '$3777.35', '2021-03-07 17:58:51'),
+(2, 12, 'jPVPV', 5, '$2105.32', '2021-06-21 12:34:12'),
+(3, 6, 'gDNbE', 7, '$772', '2021-05-11 11:25:11'),
+(4, 10, 'D3wc7', 8, '$307.36', '2021-05-03 18:33:12'),
+(5, 1, 'uK3uL', 1, '$614.72', '2021-05-02 21:53:55'),
+(6, 7, 'rpRuM', 9, '$1763.02', '2021-04-10 23:47:15'),
+(7, 3, '495mg', 6, '$3673.95', '2021-03-02 03:18:35'),
+(8, 1, 'D9DD5', 5, '$526.33', '2021-02-20 16:37:16'),
+(9, 7, 'Rr0sN', 7, '$1854.68', '2021-02-04 13:54:21');
 
 --
 -- Índices para tablas volcadas
@@ -71,7 +70,7 @@ ALTER TABLE `factura`
 -- AUTO_INCREMENT de la tabla `factura`
 --
 ALTER TABLE `factura`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

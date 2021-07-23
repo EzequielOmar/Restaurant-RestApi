@@ -7,7 +7,7 @@ require_once './utiles/token.php';
 
 /**
  * Chequea que el usuario esté logueado mediante JWT,
- * si el token es invaáido, redirecciona al login corresponiente.
+ * si el token es inválido, redirecciona al login corresponiente.
  * (si la url contiene staff/ -> /staff/login, si no  -> /login)
  */
 class AuthMW extends Container

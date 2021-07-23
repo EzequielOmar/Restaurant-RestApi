@@ -7,13 +7,7 @@ require_once './utiles/token.php';
  *Caso contrario retorna  No tiene permisos para ver este contenido - 403
  */
 class isTipoMW
-{/*
-    private static $_tipo;
-    public function __construct($tipo)
-    {
-        self::$_tipo = $tipo;
-    }
-*/
+{
     public function Cliente($req, $res, $next)
     {
         if (!empty($_COOKIE['token'])) {

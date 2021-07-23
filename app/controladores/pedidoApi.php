@@ -108,7 +108,7 @@ class PedidoApi extends Container implements IApiUsable
         $fact->id_mesa = $id_mesa;
         $fact->codigo_pedido = $cod_pedidos;
         $fact->id_cliente = $id_cliente;
-        $fact->monto = '$'.number_format($monto, 2);
+        $fact->monto = number_format($monto, 2);
         $dt = new DateTime("now", new DateTimeZone("America/Argentina/Buenos_Aires"));
         $fact->fecha = $dt->format('Y-m-d H-i-s');
         $fact->save();
@@ -244,7 +244,7 @@ class PedidoApi extends Container implements IApiUsable
     {
         switch ($req->getAttribute('sector')) {
             case Sector::socio:
-                $pedidos = Pedido::get()->all();
+                $pedidos = Pedido::withTrashed()->get()->all();
                 break;
             case Sector::mozo:
                 $pedidos = Pedido::where('estado', '>', '0')->where('estado', '<', '4')->where('id_mozo', '=', $req->getAttribute('id'))->get()->all();

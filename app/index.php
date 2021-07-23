@@ -17,6 +17,7 @@ require_once './controladores/staffApi.php';
 require_once './controladores/mesaApi.php';
 require_once './controladores/pedidoApi.php';
 require_once './controladores/cierreApi.php';
+require_once './controladores/listadoApi.php';
 
 
 //carga variables de entorno solo en modo dev
@@ -38,7 +39,7 @@ $config['notFoundHandler'] = function ($c) {
 
 //App instance
 $app = new \Slim\App($config);
-unset($app->getContainer()['errorHandler']); //temp despues sobreescribir errohabndler
+unset($app->getContainer()['errorHandler']); //temp despues sobreescribir errohandler
 unset($app->getContainer()['phpErrorHandler']); //temp despues sobreescribir errohabndler
 // Eloquent
 $container = $app->getContainer();
@@ -56,44 +57,29 @@ $capsule->addConnection([
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
-/*
-use App\Models\Mesa;
-Mesa::query()->update(['id_mozo_asignado'=>0,'estado'=>1]);
-use App\Models\Comentario;
-Comentario::truncate();
-use App\Models\Pedido;
-Pedido::truncate();
-use App\Models\Factura;
-Factura::truncate();
-use App\Models\Staff;
-Staff::query()->update(['estado'=>3]);
-Mesa::where('estado','=',1)->update(['id_mozo_asignado'=>0]);
-use App\Models\Producto;
-use App\Models\Cliente;
-Producto::truncate();
-Staff::truncate();
-Cliente::truncate();
-Mesa::truncate();
-//LIMPIAR TABLAS Y REINICIAR IDS
-*/
-//routes
+//rutas
+//sin log
 $app->group('', function () {
     $this->get('[/]', \productoApi::class . ':TraerTodos')->setName('home');;
     $this->map(['GET', 'POST'], '/login', \clienteApi::class . ':Loguear')->setName('login');
     $this->map(['GET', 'POST'], '/staff/login', \staffApi::class . ':Loguear')->setName('staff-login');
     $this->map(['GET', 'POST'], '/registro', \clienteApi::class . ':CargarUno');
 })->add(new corsMW());
+//con log
 $app->group('', function () {
+    //cliente
     $this->group('/pedir', function () {
         $this->post('[/]', \pedidoApi::class . ':CargarUno');
         $this->get('/{cod_mesa:[0-9^a-z^A-Z]+}/{cod_pedido:[0-9^a-z^A-Z]+}', \pedidoApi::class . ':TraerUno');
         $this->post('/{cod_mesa:[0-9^a-z^A-Z]+}/{cod_pedido:[0-9^a-z^A-Z]+}', \pedidoApi::class . ':BorrarUno');
         $this->map(['GET', 'POST'], '/comentario', \cierreApi::class . ':CargarUno')->setName('comentario');
     })->add(isTipoMW::class . ':Cliente');
+    //staff
     $this->group('/pedidos', function () {
         $this->get('[/]', \pedidoApi::class . ':TraerTodos');
         $this->put('/{id:[0-9]+}', \pedidoApi::class . ':ModificarUno');
     })->add(isTipoMW::class . ':Staff');
+    //admin
     $this->group('/staff', function () {
         $this->get('[/]', \staffApi::class . ':TraerTodos');
         $this->get('/{id:[0-9]+}', \staffApi::class . ':TraerUno');
@@ -114,8 +100,28 @@ $app->group('', function () {
         $this->post('[/]', \mesaApi::class . ':CargarUno');
         $this->put('/{id:[0-9]+}', \mesaApi::class . ':ModificarUno');
         $this->delete('/{id:[0-9]+}', \mesaApi::class . ':BorrarUno');
-    })->add(new isSectorMW(Sector::socio))->add(isTipoMW::class . ':Cliente');
+    })->add(new isSectorMW(Sector::socio))->add(isTipoMW::class . ':Staff');
+    $this->group('/listado',function(){
+        $this->group('/pedido',function(){
+            $this->get('/venta/{take:[0-9]+}',\listadoApi::class . ':PedidoVenta');
+            $this->get('/demorado',\listadoApi::class . ':PedidoFueraDeTiempo');
+            $this->get('/cancelado',\listadoApi::class . ':PedidoCancelado');
+        });
+        $this->group('/mesa',function(){
+            $this->get('/usada/{take:[0-9]+}',\listadoApi::class . ':MesaUsada');
+            $this->get('/factura',\listadoApi::class . ':MesaFactura');
+            $this->get('/comentario/{take:[0-9]+}',\listadoApi::class . ':MesaComentario');
+        });
+    })->add(new isSectorMW(Sector::socio))->add(isTipoMW::class . ':Staff');
 })->add(new AuthMW($app->getContainer()))->add(new corsMW());
-$app->run();
 
-/*->add(new AuthMW($this->getContainer()->get('router')))*/
+$app->run();
+/*
+7- De los empleados:
+a- Los días y horarios que se Ingresaron al sistema.   **
+b- Cantidad de operaciones de todos por sector.		?
+c- Cantidad de operaciones de todos por sector, listada por cada empleado.?
+d- Cantidad de operaciones de cada uno por separado.?
+para esto hacer logs
+y falta archivos
+*/

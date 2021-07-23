@@ -22,7 +22,7 @@ class ProductoApi implements IApiUsable
         $prod->nombre = ucfirst(strtolower(trim($nombre)));
         $prod->descripcion = ucfirst(strtolower(trim($descripcion)));
         $prod->sector = trim($sector);
-        $prod->precio = '$' . str_replace(',', '.', $precio);
+        $prod->precio = str_replace(',', '.', $precio);
         $prod->stock = $stock;
         if ($prod->sector < 1 || $prod->sector > 5)
             throw new Exception("No corresponde el sector.");
@@ -44,8 +44,7 @@ class ProductoApi implements IApiUsable
         $modif->nombre = ucfirst(strtolower(trim($nombre)));
         $modif->descripcion = ucfirst(strtolower(trim($descripcion)));
         $modif->sector = trim($sector);
-        if ($precio[0] != '$')
-            $modif->precio = '$' . str_replace(',', '.', $precio);
+        $modif->precio = str_replace(',', '.', $precio);
         $modif->stock = $stock;
         if (!is_numeric(substr($modif->precio, 1)) || !is_numeric($modif->stock))
             throw new Exception("Error, formato incorrecto");
