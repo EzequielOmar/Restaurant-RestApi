@@ -1,17 +1,55 @@
 <?php
 
 use App\Models\Cliente;
+use App\Models\Operacion;
 use App\Models\Comentario;
-use App\Models\Factura;
 use App\Models\Pedido;
 use App\Models\Mesa;
-use App\Models\Producto;
 use App\Models\Staff;
 
 require_once './utiles/pdf.php';
+require_once './utiles/enum.php';
+
 
 class listadoApi
 {
+    /*
+    7- De los empleados:
+    a- Los días y horarios que se Ingresaron al sistema.   **
+    b- Cantidad de operaciones de todos por sector.		?
+    c- Cantidad de operaciones de todos por sector, listada por cada empleado.?
+    d- Cantidad de operaciones de cada uno por separado.?
+
+    harcodear y hacer la parte en que se guarda sino si jajaj
+    */
+    public function StaffLogin($req, $res, $args)
+    {
+        var_dump("asd");
+        try{
+
+            $login = Operacion::get();
+        }catch(Exception $e){
+            var_dump($e);
+        }
+        $res->getBody()->write(
+            json_encode(
+                array(
+                    "Lista de Login: "  => $login
+                )
+            )
+        );
+        return $res->withStatus(200)
+            ->withHeader('Content-Type', 'application/json');
+    }
+
+    public function StaffSector($req, $res, $args)
+    {
+    }
+
+    public function StaffId($req, $res, $args)
+    {
+    }
+
     public function PedidoVenta($req, $res, $args)
     {
         $take = $args['take'];

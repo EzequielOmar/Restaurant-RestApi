@@ -4,12 +4,23 @@ include_once './utiles/hash.php';
 include_once './utiles/enum.php';
 
 use App\Models\Mesa;
-use \App\Models\Staff as Staff;
+use App\Models\Operacion;
+use \App\Models\Staff;
 
 class staffApi implements IApiUsable
 {
     private static $nro_max_MesasPorMozo = 5;
     private static $largo_dni = 8;
+
+    private static function OperacionLoginStaff($staff_id, $staff_sector)
+    {
+        $op = new Operacion();
+        $op->operacion = OperacionStaff::login;
+        $op->id_staff = $staff_id;
+        $op->sector = $staff_sector;
+        $dt = new DateTime("now", new DateTimeZone("America/Argentina/Buenos_Aires"));
+        $op->fecha = $dt->format('Y-m-d H-i-s');
+    }
 
     private static function AsignarMesasAMozos($mozo_id)
     {
@@ -149,6 +160,8 @@ class staffApi implements IApiUsable
             );
             $token = Token::Crear($data);
             setcookie("token", $token, time() + 360, "/"); //6min
+            if ($staff->sector != Sector::socio)
+                self::OperacionLoginStaff($staff->id, $staff->sector);
             if ($staff->sector == Sector::mozo)
                 self::AsignarMesasAMozos($staff->id);
         } catch (Exception $e) {

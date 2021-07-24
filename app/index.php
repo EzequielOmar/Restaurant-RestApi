@@ -1,13 +1,8 @@
 <?php
-//mostrar errores por pantalla
-error_reporting(-1);
-ini_set('display_errors', 1);
-
 use Illuminate\Database\Capsule\Manager as Capsule;
 
-require_once __DIR__ .'/../TCPDF/tcpdf.php';
-
 require __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ .'/../TCPDF/tcpdf.php';
 require_once './utiles/enum.php';
 require_once './middlewares/corsMW.php';
 require_once './middlewares/authMW.php';
@@ -21,7 +16,9 @@ require_once './controladores/pedidoApi.php';
 require_once './controladores/cierreApi.php';
 require_once './controladores/listadoApi.php';
 
-
+//mostrar errores por pantalla
+error_reporting(-1);
+ini_set('display_errors', 1);
 //carga variables de entorno solo en modo dev
 if (!isset($_SERVER['APP_ENV'])) {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
@@ -38,11 +35,10 @@ $config['notFoundHandler'] = function ($c) {
             ->write('La pagina no existe. Te fuiste de Comanda-app!');
     };
 };
-
+$config['errorHandler'] = $config['notFoundHandler'];
+$config['phpErrorHandler'] = $config['notFoundHandler'];
 //App instance
 $app = new \Slim\App($config);
-unset($app->getContainer()['errorHandler']); //temp despues sobreescribir errohandler
-unset($app->getContainer()['phpErrorHandler']); //temp despues sobreescribir errohabndler
 // Eloquent
 $container = $app->getContainer();
 $capsule = new Capsule;
@@ -58,7 +54,6 @@ $capsule->addConnection([
 ]);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
-
 //rutas
 //sin log
 $app->group('', function () {
@@ -104,6 +99,9 @@ $app->group('', function () {
         $this->delete('/{id:[0-9]+}', \mesaApi::class . ':BorrarUno');
     })->add(new isSectorMW(Sector::socio))->add(isTipoMW::class . ':Staff');
     $this->group('/listado',function(){
+        $this->get('/login',\listadoApi::class . ':StaffLogin');
+        $this->get('/operaciones/{sector:[a-z]+}',\listadoApi::class . ':StaffSector');
+        $this->get('/operaciones/{id:[0-9]+}',\listadoApi::class . ':StaffId');
         $this->group('/pedido',function(){
             $this->get('/venta/{take:[0-9]+}',\listadoApi::class . ':PedidoVenta');
             $this->get('/demorado',\listadoApi::class . ':PedidoFueraDeTiempo');
@@ -120,10 +118,3 @@ $app->group('', function () {
 });//->add(new AuthMW($app->getContainer()))->add(new corsMW());
 
 $app->run();
-/*
-7- De los empleados:
-a- Los días y horarios que se Ingresaron al sistema.   **
-b- Cantidad de operaciones de todos por sector.		?
-c- Cantidad de operaciones de todos por sector, listada por cada empleado.?
-d- Cantidad de operaciones de cada uno por separado.?
-*/

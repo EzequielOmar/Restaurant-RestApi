@@ -40,3 +40,11 @@ abstract class EstadoDeStaff
     const suspendido = 4;
     const baja = 5;
 }
+
+abstract class OperacionStaff
+{
+    const login = "Login";
+    const logout = "Logout";
+    const toma = "Toma servicio";
+    const despacho = "Despacho";
+}
