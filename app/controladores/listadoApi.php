@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Cliente;
 use App\Models\Comentario;
 use App\Models\Factura;
 use App\Models\Pedido;
@@ -7,6 +8,7 @@ use App\Models\Mesa;
 use App\Models\Producto;
 use App\Models\Staff;
 
+require_once './utiles/pdf.php';
 
 class listadoApi
 {
@@ -136,5 +138,51 @@ class listadoApi
         );
         return $res->withStatus(200)
             ->withHeader('Content-Type', 'application/json');
+    }
+
+    public function PdfClientes($req, $res, $args)
+    {
+        $clientes = Cliente::withTrashed()->get()->all();
+        $pdf = new MYPDFF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf->SetAuthor('Comanda-app');
+        $pdf->SetTitle('Clientes');
+        $pdf->SetHeaderData('', 0, 'Listado de clientes de ComandaApp.', 'by comanda-app.com');
+        $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->SetFont('helvetica', '', 12);
+        $pdf->AddPage();
+        $pdf->Clientes($clientes);
+        $res->getBody()->write($pdf->Output('clientes.pdf', 'I'));
+        return $res->withStatus(200)
+            ->withHeader('Content-Type', 'application/pdf');
+    }
+
+    public function PdfStaff($req, $res, $args)
+    {
+        $staff = Staff::withTrashed()->get()->all();
+        $pdf = new MYPDFF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf->SetAuthor('Comanda-app');
+        $pdf->SetTitle('Staff');
+        $pdf->SetHeaderData('', 0, 'Listado de staff de ComandaApp.', 'by comanda-app.com');
+        $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->SetFont('helvetica', '', 12);
+        $pdf->AddPage();
+        $pdf->Staff($staff);
+        $res->getBody()->write($pdf->Output('staff.pdf', 'I'));
+        return $res->withStatus(200)
+            ->withHeader('Content-Type', 'application/pdf');
     }
 }

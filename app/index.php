@@ -5,6 +5,8 @@ ini_set('display_errors', 1);
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+require_once __DIR__ .'/../TCPDF/tcpdf.php';
+
 require __DIR__ . '/../vendor/autoload.php';
 require_once './utiles/enum.php';
 require_once './middlewares/corsMW.php';
@@ -112,8 +114,10 @@ $app->group('', function () {
             $this->get('/factura',\listadoApi::class . ':MesaFactura');
             $this->get('/comentario/{take:[0-9]+}',\listadoApi::class . ':MesaComentario');
         });
-    })->add(new isSectorMW(Sector::socio))->add(isTipoMW::class . ':Staff');
-})->add(new AuthMW($app->getContainer()))->add(new corsMW());
+        $this->get('/clientes',\listadoApi::class . ':PdfClientes');
+        $this->get('/staff',\listadoApi::class . ':PdfStaff');
+    });//->add(new isSectorMW(Sector::socio))->add(isTipoMW::class . ':Staff');
+});//->add(new AuthMW($app->getContainer()))->add(new corsMW());
 
 $app->run();
 /*
@@ -122,6 +126,4 @@ a- Los días y horarios que se Ingresaron al sistema.   **
 b- Cantidad de operaciones de todos por sector.		?
 c- Cantidad de operaciones de todos por sector, listada por cada empleado.?
 d- Cantidad de operaciones de cada uno por separado.?
-para esto hacer logs
-y falta archivos
 */
