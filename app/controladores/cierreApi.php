@@ -5,8 +5,7 @@ use App\Models\Comentario;
 use App\Models\Factura;
 use App\Models\Pedido;
 
-require_once './modelos/factura.php';
-require_once './modelos/comentario.php';
+
 require_once './utiles/container.php';
 
 

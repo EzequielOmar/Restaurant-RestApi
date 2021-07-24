@@ -2,17 +2,15 @@
 
 use App\Controllers\Container;
 use App\Models\Factura;
+use App\Models\Log;
 use App\Models\Mesa;
 use App\Models\Pedido;
 use App\Models\Producto;
 use App\Models\Staff;
 
 require_once './interfaces/IApiUsable.php';
-require_once './modelos/pedido.php';
-require_once './modelos/mesa.php';
-require_once './modelos/staff.php';
-require_once './modelos/producto.php';
-require_once './modelos/factura.php';
+
+
 require_once './utiles/container.php';
 include_once './utiles/alfanum.php';
 include_once './utiles/enum.php';
@@ -129,6 +127,7 @@ class PedidoApi extends Container implements IApiUsable
                 if ($modif->id_mozo == $id_staff && $modif->estado == EstadoDePedido::listo) {
                     $modif->hora_entregado =  $dt->format('H:i:s');
                     $modif->estado = EstadoDePedido::entregado;
+                    staffApi::CrearLog(OperacionStaff::despacho, $id_staff, Sector::mozo);
                 }
                 break;
             case Sector::bar:
@@ -140,15 +139,18 @@ class PedidoApi extends Container implements IApiUsable
                         $modif->hora_tomado =  $dt->format('H:i:s');
                         $modif->hora_estimada = $tiempoEstimado;
                         $modif->estado = EstadoDePedido::preparacion;
+                        staffApi::CrearLog(OperacionStaff::tomaServ, $id_staff, $req->getAttribute('sector'));
                     } elseif ($modif->estado == EstadoDePedido::preparacion && $modif->id_elaborador == $id_staff) {
                         $modif->hora_listo =  $dt->format('H:i:s');
                         $modif->estado = EstadoDePedido::listo;
+                        staffApi::CrearLog(OperacionStaff::despacho, $id_staff,$req->getAttribute('sector'));
                     }
                 }
                 break;
         }
         return $modif;
     }
+
     /**
      *  GET -> Muestra los pedidos correspondientes - si coinciden los parametros.
      * */

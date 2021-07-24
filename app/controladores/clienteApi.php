@@ -2,7 +2,6 @@
 
 use App\Models\Cliente;
 
-require_once './modelos/cliente.php';
 include_once './utiles/hash.php';
 
 class clienteApi 

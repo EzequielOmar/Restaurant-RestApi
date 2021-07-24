@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Operacion extends Model
+class Log extends Model
 {
     protected $primaryKey = 'id';
-    protected $table = 'operacion';
+    protected $table = 'log';
     public $incrementing = true;
     public $timestamps = false;
     protected $fillable = [

@@ -1,0 +1,997 @@
+{
+	"info": {
+		"_postman_id": "9db2a0ae-33a2-49e0-b797-bce52ddfbd1d",
+		"name": "privado",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "mesa",
+			"item": [
+				{
+					"name": "todos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/mesa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"mesa"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "por id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/mesa/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"mesa",
+								"3"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "cargar una mesa",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/mesa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"mesa"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "modificar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "estado",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/mesa/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"mesa",
+								"3"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dni",
+									"value": "49999999",
+									"type": "text"
+								},
+								{
+									"key": "nombre",
+									"value": "gimena",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "bendita",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "gimenabe",
+									"type": "text"
+								},
+								{
+									"key": "sector",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/mesa/16",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"mesa",
+								"16"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "producto",
+			"item": [
+				{
+					"name": "todos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/producto",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"producto"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "por id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dni",
+									"value": "49999999",
+									"type": "text"
+								},
+								{
+									"key": "nombre",
+									"value": "gimena",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "bendita",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "gimenabe",
+									"type": "text"
+								},
+								{
+									"key": "sector",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/producto/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"producto",
+								"5"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "alta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nombre",
+									"value": "tira de asado",
+									"type": "text"
+								},
+								{
+									"key": "descripcion",
+									"value": "ricachona cocinada lento",
+									"type": "text"
+								},
+								{
+									"key": "sector",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "precio",
+									"value": "1250.8",
+									"type": "text"
+								},
+								{
+									"key": "stock",
+									"value": "20",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/producto",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"producto"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "modificar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nombre",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "descripcion",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "sector",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "precio",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "stock",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/pedidos/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"pedidos",
+								"3"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dni",
+									"value": "49999999",
+									"type": "text"
+								},
+								{
+									"key": "nombre",
+									"value": "gimena",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "bendita",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "gimenabe",
+									"type": "text"
+								},
+								{
+									"key": "sector",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/producto/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"producto",
+								"5"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "staff",
+			"item": [
+				{
+					"name": "todos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dni",
+									"value": "49999999",
+									"type": "text"
+								},
+								{
+									"key": "nombre",
+									"value": "gimena",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "bendita",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "gimenabe",
+									"type": "text"
+								},
+								{
+									"key": "sector",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/staff/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"staff",
+								""
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "por id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dni",
+									"value": "49999999",
+									"type": "text"
+								},
+								{
+									"key": "nombre",
+									"value": "gimena",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "bendita",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "gimenabe",
+									"type": "text"
+								},
+								{
+									"key": "sector",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/staff/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"staff",
+								"11"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "alta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dni",
+									"value": "40000003",
+									"type": "text"
+								},
+								{
+									"key": "nombre",
+									"value": "edwing",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "caradona",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "edwingca",
+									"type": "text"
+								},
+								{
+									"key": "sector",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/staff",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"staff"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "modificar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "dni",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "nombre",
+									"value": "Finoo",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "apellido",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sector",
+									"value": "3",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/staff/10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"staff",
+								"10"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dni",
+									"value": "49999999",
+									"type": "text"
+								},
+								{
+									"key": "nombre",
+									"value": "gimena",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "bendita",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "gimenabe",
+									"type": "text"
+								},
+								{
+									"key": "sector",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/staff/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"staff",
+								"5"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "pedidos",
+			"item": [
+				{
+					"name": "traer por sector",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/pedidos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"pedidos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modificar por sector",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "estimado",
+									"value": "00:17:00",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/pedidos/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"pedidos",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "listado",
+			"item": [
+				{
+					"name": "pedido venta",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/listado/pedido/venta/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"listado",
+								"pedido",
+								"venta",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pedido demorado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/listado/pedido/demorado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"listado",
+								"pedido",
+								"demorado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pedido cancelado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/listado/pedido/cancelado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"listado",
+								"pedido",
+								"cancelado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mesa usada",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/listado/mesa/usada/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"listado",
+								"mesa",
+								"usada",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mesa factura",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/listado/mesa/factura?desde=2021-02-22&hasta=2021-04-11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"listado",
+								"mesa",
+								"factura"
+							],
+							"query": [
+								{
+									"key": "desde",
+									"value": "2021-02-22"
+								},
+								{
+									"key": "hasta",
+									"value": "2021-04-11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mesa comentario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/listado/mesa/comentario/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"listado",
+								"mesa",
+								"comentario",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login de staffs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/listado/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"listado",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ops por sector",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/listado/operaciones/cocina",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"listado",
+								"operaciones",
+								"cocina"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ops por id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/Comanda/app/listado/operaciones/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"listado",
+								"operaciones",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -3,6 +3,7 @@ require_once './interfaces/IApiUsable.php';
 include_once './utiles/hash.php';
 include_once './utiles/enum.php';
 
+use App\Models\Log;
 use App\Models\Mesa;
 use App\Models\Operacion;
 use \App\Models\Staff;
@@ -11,16 +12,6 @@ class staffApi implements IApiUsable
 {
     private static $nro_max_MesasPorMozo = 5;
     private static $largo_dni = 8;
-
-    private static function OperacionLoginStaff($staff_id, $staff_sector)
-    {
-        $op = new Operacion();
-        $op->operacion = OperacionStaff::login;
-        $op->id_staff = $staff_id;
-        $op->sector = $staff_sector;
-        $dt = new DateTime("now", new DateTimeZone("America/Argentina/Buenos_Aires"));
-        $op->fecha = $dt->format('Y-m-d H-i-s');
-    }
 
     private static function AsignarMesasAMozos($mozo_id)
     {
@@ -82,6 +73,15 @@ class staffApi implements IApiUsable
         if ($staff->clave != HashClave($clave))
             throw new Exception("Contraseña incorrecta.");
         return $staff;
+    }
+    public static function CrearLog($operacion,$staff_id,$staff_sector){
+        $log = new Log();
+        $log->operacion = $operacion;
+        $log->id_staff = $staff_id;
+        $log->sector = $staff_sector;
+        $dt = new DateTime("now", new DateTimeZone("America/Argentina/Buenos_Aires"));
+        $log->fecha = $dt->format('Y-m-d H-i-s');
+        $log->save();
     }
     public function TraerUno($req, $res, $args)
     {
@@ -161,7 +161,7 @@ class staffApi implements IApiUsable
             $token = Token::Crear($data);
             setcookie("token", $token, time() + 360, "/"); //6min
             if ($staff->sector != Sector::socio)
-                self::OperacionLoginStaff($staff->id, $staff->sector);
+                self::CrearLog(OperacionStaff::login,$staff->id, $staff->sector);
             if ($staff->sector == Sector::mozo)
                 self::AsignarMesasAMozos($staff->id);
         } catch (Exception $e) {

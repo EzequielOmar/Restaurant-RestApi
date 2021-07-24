@@ -1,0 +1,424 @@
+{
+	"info": {
+		"_postman_id": "f3a73a04-92fe-4ba4-9fa7-2ab6942553ed",
+		"name": "publico (sin log)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "log staff",
+			"item": [
+				{
+					"name": "login staff(view)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dni",
+									"value": "40123123",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "carmensita",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/staff",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"staff"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				},
+				{
+					"name": "login staff",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dni",
+									"value": "99999999",
+									"description": "admin",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "clave",
+									"value": "tito",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "dni",
+									"value": "40000004",
+									"description": "mozo",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "clave",
+									"value": "angelale",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "dni",
+									"value": "40000001",
+									"description": "bar",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "papugo",
+									"type": "text"
+								},
+								{
+									"key": "dni",
+									"value": "40000002",
+									"description": "cocina",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "clave",
+									"value": "meganra",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "dni",
+									"value": "40000003",
+									"description": "cerveza",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "clave",
+									"value": "edwingca",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/staff/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"staff",
+								"login"
+							]
+						},
+						"description": "Datamuse para aplicacion de rimas"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "log cliente",
+			"item": [
+				{
+					"name": "login cliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "mail",
+									"value": "aguilbert0@odnoklassniki.ru",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "pass",
+									"type": "text"
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login cliente (view)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "mail",
+									"value": "titolevando@hotmail.com",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "tito123",
+									"type": "text"
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registrar cliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "mail",
+									"value": "titolevando@hotmail.com",
+									"type": "text"
+								},
+								{
+									"key": "nombre",
+									"value": "titovich",
+									"type": "text"
+								},
+								{
+									"key": "apellido",
+									"value": "levando",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "tito123",
+									"type": "text"
+								},
+								{
+									"key": "cel",
+									"value": "1545151404",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/registro",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"registro"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registrar cliente (view)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "mail",
+									"value": "titolevando@hotmail.com",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "tito123",
+									"type": "text"
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/registro",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"registro"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "home - Obtener productos",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "mail",
+							"value": "titolevando@hotmail.com",
+							"type": "text"
+						},
+						{
+							"key": "clave",
+							"value": "tito123",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/Comanda/app",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"Comanda",
+						"app"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

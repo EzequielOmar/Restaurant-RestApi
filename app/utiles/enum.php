@@ -1,4 +1,7 @@
 <?php
+
+use App\Models\Log;
+
 abstract class Tipo
 {
     const cliente = 1;
@@ -45,6 +48,7 @@ abstract class OperacionStaff
 {
     const login = "Login";
     const logout = "Logout";
-    const toma = "Toma servicio";
+    const tomaServ = "Toma servicio";
+    const tomaMesa = "Toma mesa";
     const despacho = "Despacho";
 }

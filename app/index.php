@@ -4,17 +4,25 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 require __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ .'/../TCPDF/tcpdf.php';
 require_once './utiles/enum.php';
+require_once './modelos/cliente.php';
+require_once './modelos/comentario.php';
+require_once './modelos/factura.php';
+require_once './modelos/log.php';
+require_once './modelos/mesa.php';
+require_once './modelos/pedido.php';
+require_once './modelos/producto.php';
+require_once './modelos/staff.php';
+require_once './controladores/clienteApi.php';
+require_once './controladores/mesaApi.php';
+require_once './controladores/pedidoApi.php';
+require_once './controladores/productoApi.php';
+require_once './controladores/staffApi.php';
+require_once './controladores/cierreApi.php';
+require_once './controladores/listadoApi.php';
 require_once './middlewares/corsMW.php';
 require_once './middlewares/authMW.php';
 require_once './middlewares/isTipoMW.php';
 require_once './middlewares/isSectorMW.php';
-require_once './controladores/productoApi.php';
-require_once './controladores/clienteApi.php';
-require_once './controladores/staffApi.php';
-require_once './controladores/mesaApi.php';
-require_once './controladores/pedidoApi.php';
-require_once './controladores/cierreApi.php';
-require_once './controladores/listadoApi.php';
 
 //mostrar errores por pantalla
 error_reporting(-1);
@@ -40,7 +48,6 @@ $config['phpErrorHandler'] = $config['notFoundHandler'];
 //App instance
 $app = new \Slim\App($config);
 // Eloquent
-$container = $app->getContainer();
 $capsule = new Capsule;
 $capsule->addConnection([
     'driver'    => 'mysql',
@@ -54,6 +61,7 @@ $capsule->addConnection([
 ]);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
+
 //rutas
 //sin log
 $app->group('', function () {
@@ -114,7 +122,7 @@ $app->group('', function () {
         });
         $this->get('/clientes',\listadoApi::class . ':PdfClientes');
         $this->get('/staff',\listadoApi::class . ':PdfStaff');
-    });//->add(new isSectorMW(Sector::socio))->add(isTipoMW::class . ':Staff');
-});//->add(new AuthMW($app->getContainer()))->add(new corsMW());
+    })->add(new isSectorMW(Sector::socio))->add(isTipoMW::class . ':Staff');
+})->add(new AuthMW($app->getContainer()))->add(new corsMW());
 
 $app->run();

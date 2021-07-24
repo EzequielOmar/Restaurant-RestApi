@@ -1,0 +1,196 @@
+{
+	"info": {
+		"_postman_id": "fc8ae557-189e-40e5-9e7c-93a5c6c30b94",
+		"name": "publico (logueado)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "cliente /pedido",
+			"item": [
+				{
+					"name": "pedir",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id_productos",
+									"value": "[\"1\"]",
+									"type": "text"
+								},
+								{
+									"key": "cantidades",
+									"value": "[\"2\"]",
+									"type": "text"
+								},
+								{
+									"key": "foto-mesa",
+									"type": "file",
+									"src": "/home/ezequielomar/Imágenes/lion.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/pedir",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"pedir"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancelar/pedir cuenta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/pedir/OL8DN/vg72f",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"pedir",
+								"OL8DN",
+								"vg72f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ver un pedido",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id_productos",
+									"value": "[\"1\"]",
+									"type": "text"
+								},
+								{
+									"key": "cantidades",
+									"value": "[\"119\"]",
+									"type": "text"
+								},
+								{
+									"key": "foto-mesa",
+									"type": "file",
+									"src": "/home/ezequielomar/Imágenes/98603-minimalism-Buddhism-Avatar_The_Last_Airbender-Aang-elements-meditation.jpg",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/pedir/OL8DN/vg72f",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"pedir",
+								"OL8DN",
+								"vg72f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "dejar comentario (redirecciona aut)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "rate_mesa",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "rate_rest",
+									"value": "8",
+									"type": "text"
+								},
+								{
+									"key": "rate_mozo",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "rate_cocina",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "comentario",
+									"value": "Muy rico todo che me llene como el chavo en navidad.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/Comanda/app/pedir/comentario",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"Comanda",
+								"app",
+								"pedir",
+								"comentario"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

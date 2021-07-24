@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Cliente;
-use App\Models\Operacion;
 use App\Models\Comentario;
+use App\Models\Log;
 use App\Models\Pedido;
 use App\Models\Mesa;
 use App\Models\Staff;
@@ -13,24 +13,9 @@ require_once './utiles/enum.php';
 
 class listadoApi
 {
-    /*
-    7- De los empleados:
-    a- Los días y horarios que se Ingresaron al sistema.   **
-    b- Cantidad de operaciones de todos por sector.		?
-    c- Cantidad de operaciones de todos por sector, listada por cada empleado.?
-    d- Cantidad de operaciones de cada uno por separado.?
-
-    harcodear y hacer la parte en que se guarda sino si jajaj
-    */
     public function StaffLogin($req, $res, $args)
     {
-        var_dump("asd");
-        try{
-
-            $login = Operacion::get();
-        }catch(Exception $e){
-            var_dump($e);
-        }
+        $login = Log::where('operacion', '=', OperacionStaff::login)->get()->toArray();
         $res->getBody()->write(
             json_encode(
                 array(
@@ -44,10 +29,55 @@ class listadoApi
 
     public function StaffSector($req, $res, $args)
     {
+        $sector = $args['sector'];
+        switch ($sector) {
+            case "mozo":
+                $i = 2;
+                break;
+            case "bar":
+                $i = 3;
+                break;
+            case "cocina":
+                $i = 4;
+                break;
+            case "cerveza":
+                $i = 5;
+                break;
+        }
+        $opsPorSector = Log::selectRaw('sector, SUM(1) as Cantidad')
+            ->groupBy('sector')->get()->toArray();
+        if (isset($i))
+            $opsTodosSector = Log::where('sector', '=', $i)->selectRaw('id_staff, SUM(1) as Cantidad')
+                ->groupBy('id_staff')->get()->toArray();
+        else
+            $opsTodosSector = 'Error al ingresar el sector';
+        $res->getBody()->write(
+            json_encode(
+                array(
+                    "Cantidad de ops. por sector "  => $opsPorSector,
+                    "Ops. por staff del sector " . $sector . ": " => $opsTodosSector
+                )
+            )
+        );
+        return $res->withStatus(200)
+            ->withHeader('Content-Type', 'application/json');
     }
 
     public function StaffId($req, $res, $args)
     {
+        $id = $args['id'];
+        $opsPorId = Log::where('id_staff','=',$id)->orderBy('fecha', 'asc')->get()->toArray();
+        if(!$opsPorId)
+            $opsPorId = "El id ingresado es incorrecto, o el empleado no tiene ningun log, échelo.";
+        $res->getBody()->write(
+            json_encode(
+                array(
+                    "Ops. empleado id ".$id.": " => $opsPorId
+                )
+            )
+        );
+        return $res->withStatus(200)
+            ->withHeader('Content-Type', 'application/json');
     }
 
     public function PedidoVenta($req, $res, $args)
