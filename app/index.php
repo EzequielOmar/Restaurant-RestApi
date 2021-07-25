@@ -25,13 +25,13 @@ require_once './middlewares/isTipoMW.php';
 require_once './middlewares/isSectorMW.php';
 
 //mostrar errores por pantalla
-error_reporting(-1);
-ini_set('display_errors', 1);
+//error_reporting(-1);
+//ini_set('display_errors', 1);
 //carga variables de entorno solo en modo dev
-if (!isset($_SERVER['APP_ENV'])) {
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-    $dotenv->safeLoad();
-}
+//if (!isset($_SERVER['APP_ENV'])) {
+//    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+//    $dotenv->safeLoad();
+//}
 
 //App config
 $config['displayErrorDetails'] = true;
