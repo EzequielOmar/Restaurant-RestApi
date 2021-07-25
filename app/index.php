@@ -2,7 +2,7 @@
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 require __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ .'/../TCPDF/tcpdf.php';
+require_once __DIR__ .'/../main/tcpdf.php';
 require_once './utiles/enum.php';
 require_once './modelos/cliente.php';
 require_once './modelos/comentario.php';
@@ -24,6 +24,7 @@ require_once './middlewares/authMW.php';
 require_once './middlewares/isTipoMW.php';
 require_once './middlewares/isSectorMW.php';
 
+//DESMUTEAR PARA REPO EN LOCAL
 //mostrar errores por pantalla
 //error_reporting(-1);
 //ini_set('display_errors', 1);
