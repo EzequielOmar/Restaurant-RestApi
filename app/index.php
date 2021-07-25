@@ -2,7 +2,6 @@
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 require __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ .'/../main/tcpdf.php';
 require_once './utiles/enum.php';
 require_once './modelos/cliente.php';
 require_once './modelos/comentario.php';
